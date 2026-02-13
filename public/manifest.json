@@ -1,0 +1,14 @@
+{
+  "name": "HigherSelf",
+  "short_name": "HigherSelf",
+  "description": "Meet your future self. AI coaching in your own voice.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060e24",
+  "theme_color": "#E8B84B",
+  "icons": [
+    { "src": "/img/logo-96.png", "sizes": "96x96", "type": "image/png" },
+    { "src": "/img/logo-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/img/logo-1024.png", "sizes": "1024x1024", "type": "image/png" }
+  ]
+}

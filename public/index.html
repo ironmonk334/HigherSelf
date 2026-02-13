@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#060e24">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/img/logo-180.png">
+<title>HigherSelf</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060e24;--bg2:#0b1533;--card:rgba(12,20,50,.7);--blue:#3B7BF7;--gold:#E8B84B;--gold-g:rgba(232,184,75,.2);--gold-d:rgba(232,184,75,.5);--w:#fff;--w9:rgba(255,255,255,.9);--w6:rgba(255,255,255,.6);--w3:rgba(255,255,255,.35);--w1:rgba(255,255,255,.12);--w0:rgba(255,255,255,.06);--r:18px;--font:'DM Sans',-apple-system,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;width:100%;background:linear-gradient(160deg,var(--bg) 0%,#091340 35%,var(--bg2) 65%,#070d22 100%);font-family:var(--font);color:var(--w);overflow-x:hidden;-webkit-font-smoothing:antialiased;font-size:16px}
+#cosmos{position:fixed;inset:0;z-index:0;pointer-events:none}
+.screen{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;padding:24px;padding-top:env(safe-area-inset-top,24px);padding-bottom:env(safe-area-inset-bottom,24px);opacity:0;transform:translateY(18px);transition:all .5s cubic-bezier(.16,1,.3,1);pointer-events:none;overflow-y:auto;justify-content:center}
+.screen.active{opacity:1;transform:translateY(0);pointer-events:auto}
+.card{background:var(--card);backdrop-filter:blur(50px);-webkit-backdrop-filter:blur(50px);border-radius:24px;border:1px solid var(--w0);padding:36px 28px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--gold-d);margin-bottom:12px}
+h1{font-size:38px;font-weight:900;letter-spacing:-.02em;line-height:1.05}
+h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
+.sub{font-size:15px;color:var(--w3);line-height:1.6;margin-top:8px}
+.btn{width:100%;padding:18px 28px;border-radius:14px;border:none;font-size:17px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .25s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn:active{transform:scale(.97)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#D4A03A);color:#1a1000;box-shadow:0 4px 28px var(--gold-g)}
+.btn-sec{background:var(--w0);color:var(--w6);border:1px solid var(--w1)}
+.btn-danger{background:rgba(255,68,68,.1);color:#ff6b6b;border:1px solid rgba(255,68,68,.2)}
+.btn:disabled{opacity:.35;pointer-events:none}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--w3);cursor:pointer;border:none;background:none;padding:0;margin-bottom:18px;font-family:var(--font);transition:color .2s}
+.back-btn:hover{color:var(--w6)}
+.back-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none}
+.goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}
+.goal-card{background:var(--w0);border:1.5px solid var(--w1);border-radius:var(--r);padding:20px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .3s;user-select:none}
+.goal-card.sel{background:linear-gradient(135deg,rgba(232,184,75,.12),rgba(59,123,247,.08));border-color:var(--gold-d)}
+.goal-card .gi{font-size:28px;flex-shrink:0}
+.goal-card .gt{font-size:15px;font-weight:700;color:var(--w6)}.goal-card.sel .gt{color:var(--w9)}
+.readout{background:rgba(232,184,75,.05);border-radius:14px;padding:20px;border:1px solid rgba(232,184,75,.1);text-align:left;margin-bottom:20px}
+.audio-viz{display:flex;align-items:center;gap:2.5px;height:44px;justify-content:center;margin:16px 0}
+.audio-bar{width:3.5px;border-radius:2px;background:linear-gradient(to top,var(--blue),var(--gold));height:4px;transition:height .1s;opacity:.3}
+.audio-bar.on{opacity:.85}
+.success-circle{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,rgba(232,184,75,.15),rgba(80,200,120,.15));border:2px solid rgba(80,200,120,.4);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:32px}
+.dash-header{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:420px;margin-bottom:24px}
+.dash-logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:900}
+.dash-logo img{width:40px;height:40px;border-radius:10px}
+.session-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.sess-card{background:var(--card);backdrop-filter:blur(20px);border-radius:var(--r);border:1px solid var(--w0);padding:22px 16px;text-align:center;cursor:pointer;transition:all .2s}
+.sess-card:active{transform:scale(.97)}
+.sess-card .si{font-size:32px;margin-bottom:10px;display:block}
+.sess-card .sn{font-size:14px;font-weight:700;color:var(--w9)}
+.sess-card .sd{font-size:11px;color:var(--w3);margin-top:4px;line-height:1.4}
+.sess-card.feat{grid-column:1/-1;display:flex;align-items:center;gap:16px;text-align:left;padding:24px 22px;background:linear-gradient(135deg,rgba(232,184,75,.08),rgba(59,123,247,.06));border-color:var(--gold-d)}
+.sess-card.feat .si{font-size:38px;margin-bottom:0;flex-shrink:0}
+.sess-card.feat .sn{font-size:16px}
+.goal-row{display:flex;align-items:center;gap:10px;padding:13px 0;font-size:14px;font-weight:600}
+.goal-row+.goal-row{border-top:1px solid var(--w0)}
+.call-orb{width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(232,184,75,.15),rgba(59,123,247,.2),rgba(12,20,50,.8));border:2px solid var(--gold-d);display:flex;align-items:center;justify-content:center;position:relative;z-index:2;box-shadow:0 0 60px rgba(59,123,247,.15)}
+.call-orb.on{box-shadow:0 0 80px rgba(232,184,75,.2),0 0 120px rgba(59,123,247,.15)}
+.call-orb .oi{font-size:56px}
+.pulse-rings{position:absolute;inset:-50px;display:none;align-items:center;justify-content:center;pointer-events:none}
+.pulse-ring{position:absolute;border-radius:50%;border:1px solid rgba(232,184,75,.12);animation:pulse 2.4s ease-out infinite}
+.call-btn{width:54px;height:54px;border-radius:50%;border:1px solid var(--w1);background:var(--w0);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;transition:all .2s;flex-shrink:0}
+.call-btn:active{transform:scale(.93)}
+.call-btn.end{width:62px;height:62px;border:none;background:linear-gradient(135deg,#ff4444,#cc3333);font-size:24px}
+.call-btn.rec{background:rgba(232,184,75,.12);border-color:var(--gold-d);animation:rp 1.5s ease-in-out infinite}
+.transcript{max-width:360px;width:100%;max-height:180px;overflow-y:auto;margin-top:14px}
+.tmsg{background:rgba(59,123,247,.08);border-radius:14px;padding:12px 16px;margin-bottom:8px;border-left:3px solid rgba(59,123,247,.4);animation:su .4s}
+.tmsg.u{border-left-color:var(--gold-d);background:rgba(232,184,75,.06)}
+.tmsg .ts{font-size:11px;font-weight:700;color:rgba(59,123,247,.5);margin-bottom:3px;text-transform:uppercase;letter-spacing:.08em}
+.tmsg.u .ts{color:var(--gold-d)}
+.tmsg .tt{font-size:13px;color:var(--w6);line-height:1.5}
+.sess-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;background:rgba(232,184,75,.1);border:1px solid rgba(232,184,75,.15);color:var(--gold-d);margin-top:14px}
+.hidden{display:none!important}
+.err{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:rgba(255,68,68,.9);color:#fff;padding:14px 22px;border-radius:14px;font-size:14px;font-weight:600;z-index:100;opacity:0;transition:opacity .3s;pointer-events:none;max-width:360px;text-align:center}.err.show{opacity:1}
+.wl{width:110px;height:110px;border-radius:24px;box-shadow:0 10px 50px var(--gold-g),0 0 80px rgba(59,123,247,.15);margin-bottom:24px;animation:fl 4s ease-in-out infinite}
+.lf{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px));text-align:center;background:linear-gradient(to top,rgba(6,14,36,.9),transparent);pointer-events:none}
+.ll{pointer-events:auto;font-size:13px;color:var(--w3);cursor:pointer;font-weight:500}.ll:hover{color:var(--gold-d)}
+.lm{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:24px}
+.lm.show{display:flex}
+.lmc{background:var(--bg2);border:1px solid var(--w1);border-radius:24px;padding:32px;max-width:340px;width:100%;text-align:center}
+.lo{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;cursor:pointer;transition:all .2s;border:1.5px solid transparent;margin-bottom:8px}
+.lo:hover{background:var(--w0)}.lo.on{border-color:var(--gold-d);background:rgba(232,184,75,.06)}
+/* Settings */
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--w0)}
+.set-row:last-child{border-bottom:none}
+.set-left{display:flex;align-items:center;gap:12px}
+.set-icon{font-size:20px}
+.set-label{font-size:14px;font-weight:600}
+.set-sub{font-size:12px;color:var(--w3);margin-top:2px}
+.set-action{font-size:13px;font-weight:700;color:var(--gold);cursor:pointer;padding:8px 14px;border-radius:10px;background:rgba(232,184,75,.08);border:none;font-family:var(--font)}
+.set-action:active{transform:scale(.95)}
+.set-action.danger{color:#ff6b6b;background:rgba(255,68,68,.08)}
+/* Stats */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px}
+.stat-box{background:var(--w0);border-radius:14px;padding:14px 10px;text-align:center}
+.stat-num{font-size:22px;font-weight:900;color:var(--gold)}
+.stat-lbl{font-size:10px;color:var(--w3);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+/* History */
+.hist-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--w0)}
+.hist-row:last-child{border-bottom:none}
+.hist-icon{font-size:20px;width:36px;height:36px;border-radius:10px;background:var(--w0);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hist-info{flex:1}
+.hist-name{font-size:13px;font-weight:700}
+.hist-time{font-size:11px;color:var(--w3);margin-top:2px}
+.hist-dur{font-size:12px;color:var(--gold-d);font-weight:600}
+/* Settings icon */
+.settings-btn{width:40px;height:40px;border-radius:12px;background:var(--w0);border:1px solid var(--w1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all .2s}
+.settings-btn:active{transform:scale(.93)}
+@keyframes pulse{0%{transform:scale(.8);opacity:.5}100%{transform:scale(1.5);opacity:0}}
+@keyframes su{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes rp{0%,100%{box-shadow:0 0 0 0 var(--gold-g)}50%{box-shadow:0 0 0 14px rgba(232,184,75,0)}}
+</style>
+</head>
+<body>
+<canvas id="cosmos"></canvas>
+<div id="err" class="err"></div>
+<div class="lf"><a class="ll" onclick="openLM()">🌐 EN — Switch language</a></div>
+<div class="lm" id="lm" onclick="if(event.target===this)closeLM()">
+  <div class="lmc">
+    <h2 style="font-size:22px;margin-bottom:20px">Choose Language</h2>
+    <div class="lo on" data-l="en" onclick="setLang('en')"><span style="font-size:26px">🇺🇸</span><div style="font-size:16px;font-weight:700">English</div></div>
+    <div class="lo" data-l="fr" onclick="setLang('fr')"><span style="font-size:26px">🇫🇷</span><div style="font-size:16px;font-weight:700">Français</div></div>
+    <div class="lo" data-l="es" onclick="setLang('es')"><span style="font-size:26px">🇪🇸</span><div style="font-size:16px;font-weight:700">Español</div></div>
+  </div>
+</div>
+
+<!-- WELCOME -->
+<div id="screen-welcome" class="screen active">
+  <div class="card" style="text-align:center;padding:44px 28px 36px">
+    <img src="/img/logo-192.png" class="wl" alt="HigherSelf">
+    <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-bottom:10px">HigherSelf</p>
+    <h1 style="font-size:36px;line-height:1.1">Coach yourself.<br>Literally.</h1>
+    <p class="sub" style="margin-top:14px;font-size:16px;line-height:1.7">Your voice. Your goals.<br>One conversation with the future you.</p>
+    <div style="height:28px"></div>
+    <button class="btn btn-gold" style="font-size:18px;padding:20px" onclick="goTo('goals')">Get Started</button>
+    <div style="height:28px"></div>
+    <div style="display:flex;justify-content:center;gap:24px">
+      <div style="text-align:center"><span style="font-size:22px;display:block;margin-bottom:4px">🎙</span><span style="font-size:11px;color:var(--w3);line-height:1.4">Clones your<br>voice</span></div>
+      <div style="text-align:center"><span style="font-size:22px;display:block;margin-bottom:4px">🧘</span><span style="font-size:11px;color:var(--w3);line-height:1.4">5 healing<br>session types</span></div>
+      <div style="text-align:center"><span style="font-size:22px;display:block;margin-bottom:4px">🧠</span><span style="font-size:11px;color:var(--w3);line-height:1.4">AI coaching<br>in your voice</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- GOALS -->
+<div id="screen-goals" class="screen">
+  <div class="card">
+    <button class="back-btn" onclick="goTo('welcome')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <p class="label">Step 1 of 2</p>
+    <h2>What do you want to transform?</h2>
+    <p class="sub">Select all that apply.</p>
+    <div class="goals-grid">
+      <div class="goal-card" data-goal="Fitness" onclick="tg(this)"><span class="gi">💪</span><span class="gt">Fitness</span></div>
+      <div class="goal-card" data-goal="Finance" onclick="tg(this)"><span class="gi">💰</span><span class="gt">Finance</span></div>
+      <div class="goal-card" data-goal="Relationships" onclick="tg(this)"><span class="gi">❤️</span><span class="gt">Relationships</span></div>
+      <div class="goal-card" data-goal="Mindset" onclick="tg(this)"><span class="gi">🧠</span><span class="gt">Mindset</span></div>
+      <div class="goal-card" data-goal="Career" onclick="tg(this)"><span class="gi">📈</span><span class="gt">Career</span></div>
+      <div class="goal-card" data-goal="Wellness" onclick="tg(this)"><span class="gi">🧘</span><span class="gt">Wellness</span></div>
+    </div>
+    <button id="goals-btn" class="btn btn-gold" disabled onclick="submitGoals()">Continue</button>
+  </div>
+</div>
+
+<!-- VOICE -->
+<div id="screen-voice" class="screen">
+  <div class="card" style="text-align:center">
+    <button class="back-btn" style="text-align:left;width:100%" onclick="goTo('goals')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <p class="label">Step 2 of 2</p>
+    <h2>Clone Your Voice</h2>
+    <p class="sub">Tap record, then read the passage below at your own pace.</p>
+    <div style="height:14px"></div>
+    <div id="vr" class="readout"><p style="font-size:15px;color:var(--w6);line-height:1.75;font-style:italic" id="vrt"></p></div>
+    <div id="vv" class="audio-viz"></div>
+    <p id="vt" style="font-size:14px;color:var(--gold-d);min-height:22px"></p>
+    <p id="vs" style="font-size:13px;color:var(--w3);min-height:20px"></p>
+    <div id="vok" class="hidden">
+      <div class="success-circle">✓</div>
+      <p style="font-size:17px;font-weight:700;margin-bottom:6px">Voice Cloned Successfully</p>
+      <p style="font-size:14px;color:var(--w3);margin-bottom:24px">Your Higher Self now speaks in your voice</p>
+      <button class="btn btn-gold" onclick="goTo('dashboard')">Start Coaching</button>
+    </div>
+    <button id="vb" class="btn btn-gold" onclick="toggleRec()">🎙 Start Recording</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="screen-dashboard" class="screen" style="justify-content:flex-start;padding-top:calc(40px + env(safe-area-inset-top,20px))">
+  <div style="max-width:420px;width:100%">
+    <div class="dash-header">
+      <div class="dash-logo"><img src="/img/logo-96.png" alt=""> HigherSelf</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="streak-badge" style="font-size:13px;color:var(--gold-d);font-weight:700"></div>
+        <button class="settings-btn" onclick="goTo('settings')">⚙️</button>
+      </div>
+    </div>
+    <!-- Stats -->
+    <div class="stat-grid" id="stats"></div>
+    <!-- Featured session -->
+    <div class="sess-card feat" onclick="startSession('free')">
+      <span class="si">💬</span>
+      <div><div class="sn">Free Conversation</div><div class="sd">Open coaching with your Higher Self</div></div>
+    </div>
+    <div class="session-grid">
+      <div class="sess-card" onclick="startSession('morning')"><span class="si">☀️</span><div class="sn">Morning</div><div class="sd">Affirmations & energy</div></div>
+      <div class="sess-card" onclick="startSession('visualization')"><span class="si">🌌</span><div class="sn">Visualization</div><div class="sd">Guided meditation</div></div>
+      <div class="sess-card" onclick="startSession('evening')"><span class="si">🌙</span><div class="sn">Evening</div><div class="sd">Reflect & set intentions</div></div>
+      <div class="sess-card" onclick="startSession('tough')"><span class="si">🔥</span><div class="sn">Tough Love</div><div class="sd">Accountability push</div></div>
+    </div>
+    <!-- Goals -->
+    <div class="card" style="padding:20px;margin-top:18px">
+      <h3 style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:10px">🎯 Active Goals</h3>
+      <div id="dg"></div>
+    </div>
+    <!-- Recent Sessions -->
+    <div class="card" style="padding:20px;margin-top:12px">
+      <h3 style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:10px">📋 Recent Sessions</h3>
+      <div id="hist"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="screen-settings" class="screen" style="justify-content:flex-start;padding-top:calc(40px + env(safe-area-inset-top,20px))">
+  <div style="max-width:420px;width:100%">
+    <button class="back-btn" onclick="goTo('dashboard')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to Dashboard</button>
+    <h2 style="margin-bottom:24px">Settings</h2>
+    <div class="card" style="padding:20px">
+      <div class="set-row">
+        <div class="set-left"><span class="set-icon">🎙</span><div><div class="set-label">Voice Clone</div><div class="set-sub" id="voice-status-set">Active</div></div></div>
+        <button class="set-action" onclick="reRecordVoice()">Re-record</button>
+      </div>
+      <div class="set-row">
+        <div class="set-left"><span class="set-icon">🎯</span><div><div class="set-label">Goals</div><div class="set-sub" id="goals-status-set">—</div></div></div>
+        <button class="set-action" onclick="editGoals()">Edit</button>
+      </div>
+      <div class="set-row">
+        <div class="set-left"><span class="set-icon">🌐</span><div><div class="set-label">Language</div><div class="set-sub" id="lang-status-set">English</div></div></div>
+        <button class="set-action" onclick="openLM()">Change</button>
+      </div>
+      <div class="set-row">
+        <div class="set-left"><span class="set-icon">🗑️</span><div><div class="set-label">Reset Everything</div><div class="set-sub">Start fresh — clears all data</div></div></div>
+        <button class="set-action danger" onclick="resetAll()">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT GOALS -->
+<div id="screen-editgoals" class="screen">
+  <div class="card">
+    <button class="back-btn" onclick="goTo('settings')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <h2>Edit Goals</h2>
+    <p class="sub">Select all that apply.</p>
+    <div class="goals-grid" id="edit-goals-grid">
+      <div class="goal-card" data-goal="Fitness" onclick="tge(this)"><span class="gi">💪</span><span class="gt">Fitness</span></div>
+      <div class="goal-card" data-goal="Finance" onclick="tge(this)"><span class="gi">💰</span><span class="gt">Finance</span></div>
+      <div class="goal-card" data-goal="Relationships" onclick="tge(this)"><span class="gi">❤️</span><span class="gt">Relationships</span></div>
+      <div class="goal-card" data-goal="Mindset" onclick="tge(this)"><span class="gi">🧠</span><span class="gt">Mindset</span></div>
+      <div class="goal-card" data-goal="Career" onclick="tge(this)"><span class="gi">📈</span><span class="gt">Career</span></div>
+      <div class="goal-card" data-goal="Wellness" onclick="tge(this)"><span class="gi">🧘</span><span class="gt">Wellness</span></div>
+    </div>
+    <button id="save-goals-btn" class="btn btn-gold" onclick="saveGoals()">Save Goals</button>
+  </div>
+</div>
+
+<!-- RE-RECORD VOICE -->
+<div id="screen-rerecord" class="screen">
+  <div class="card" style="text-align:center">
+    <button class="back-btn" style="text-align:left;width:100%" onclick="goTo('settings')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <h2>Re-record Your Voice</h2>
+    <p class="sub">Read the passage below at your own pace.</p>
+    <div style="height:14px"></div>
+    <div id="rr-readout" class="readout"><p style="font-size:15px;color:var(--w6);line-height:1.75;font-style:italic" id="rr-text"></p></div>
+    <div id="rr-viz" class="audio-viz"></div>
+    <p id="rr-timer" style="font-size:14px;color:var(--gold-d);min-height:22px"></p>
+    <p id="rr-status" style="font-size:13px;color:var(--w3);min-height:20px"></p>
+    <div id="rr-ok" class="hidden">
+      <div class="success-circle">✓</div>
+      <p style="font-size:17px;font-weight:700;margin-bottom:6px">Voice Updated</p>
+      <p style="font-size:14px;color:var(--w3);margin-bottom:24px">Your Higher Self now uses your new voice</p>
+      <button class="btn btn-gold" onclick="goTo('dashboard')">Back to Dashboard</button>
+    </div>
+    <button id="rr-btn" class="btn btn-gold" onclick="toggleReRec()">🎙 Start Recording</button>
+  </div>
+</div>
+
+<!-- CALL -->
+<div id="screen-call" class="screen" style="justify-content:space-between">
+  <div style="display:flex;align-items:center;justify-content:space-between;width:100%;max-width:420px">
+    <button class="btn btn-sec" style="width:auto;padding:8px 14px;font-size:12px" onclick="toggleTr()"><span id="trt">Show Transcript</span></button>
+    <span id="ctm" style="font-size:14px;color:var(--w3);font-variant-numeric:tabular-nums">00:00</span>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;width:100%">
+    <div style="position:relative;display:flex;align-items:center;justify-content:center">
+      <div class="pulse-rings" id="pr"><div class="pulse-ring" style="width:180px;height:180px"></div><div class="pulse-ring" style="width:230px;height:230px;animation-delay:.4s"></div><div class="pulse-ring" style="width:280px;height:280px;animation-delay:.8s"></div></div>
+      <div id="co" class="call-orb"><span class="oi" id="oi">🧠</span></div>
+    </div>
+    <div class="sess-tag" id="st">💬 Free Conversation</div>
+    <p id="cs" style="font-size:18px;font-weight:800;margin-top:8px">Connecting...</p>
+    <p id="csub" style="font-size:13px;color:var(--w3);margin-top:4px">Initializing...</p>
+    <div id="ctr" class="transcript hidden"></div>
+  </div>
+  <div style="width:100%;max-width:420px">
+    <div id="cv" class="audio-viz" style="margin-bottom:16px"></div>
+    <div style="display:flex;justify-content:center;gap:20px;align-items:center">
+      <button class="call-btn" onclick="toggleMute()"><span id="mi">🔇</span></button>
+      <button id="tb" class="call-btn" onclick="toggleTalk()" style="width:58px;height:58px;border:1.5px solid var(--gold-d);background:rgba(232,184,75,.08)"><span id="ti">🎙</span></button>
+      <button class="call-btn end" onclick="endCall()">📞</button>
+      <button class="call-btn"><span>🔊</span></button>
+    </div>
+    <p id="th" style="text-align:center;font-size:12px;color:var(--w3);margin-top:12px">Tap the mic to speak</p>
+  </div>
+</div>
+
+<script>
+const GI={Fitness:'💪',Finance:'💰',Relationships:'❤️',Mindset:'🧠',Career:'📈',Wellness:'🧘'};
+const ICONS={free:'💬',morning:'☀️',visualization:'🌌',evening:'🌙',tough:'🔥'};
+const NAMES={free:'Free Conversation',morning:'Morning Motivation',visualization:'Guided Visualization',evening:'Evening Reflection',tough:'Tough Love'};
+const LANGS={en:'English',fr:'Français',es:'Español'};
+const RD="I am becoming the person I was always meant to be. Every day I grow stronger, wiser, and more aligned with my true purpose. The challenges I face are building the resilience I need. The future I envision is already within reach. Every step I take brings me closer to the person I know I can be.";
+
+const S={lang:'en',goals:[],isRec:false,mr:null,chunks:[],ac:null,an:null,callOn:false,ct:null,cs:0,muted:false,trVis:false,talking:false,processing:false,audio:null,tr:null,tc:[],sType:'free',voiceId:null,rrRec:false,rrMr:null,rrChunks:[]};
+
+// === PERSISTENCE ===
+function save(){try{localStorage.setItem('hs',JSON.stringify({voiceId:S.voiceId,goals:S.goals,lang:S.lang,history:getHist(),streak:getStreak()}))}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem('hs'));if(d){S.voiceId=d.voiceId||null;S.goals=d.goals||[];S.lang=d.lang||'en';return d}}catch(e){}return null}
+function getHist(){try{return JSON.parse(localStorage.getItem('hs_hist'))||[]}catch(e){return[]}}
+function addHist(type,dur){const h=getHist();h.unshift({type,dur,ts:Date.now()});if(h.length>20)h.pop();try{localStorage.setItem('hs_hist',JSON.stringify(h))}catch(e){}}
+function getStreak(){try{const d=JSON.parse(localStorage.getItem('hs_streak'));if(!d)return{count:0,last:null};const today=new Date().toDateString();const last=new Date(d.last).toDateString();const yest=new Date(Date.now()-86400000).toDateString();if(last===today)return d;if(last===yest)return d;return{count:0,last:null}}catch(e){return{count:0,last:null}}}
+function bumpStreak(){const s=getStreak();const today=new Date().toDateString();const last=s.last?new Date(s.last).toDateString():null;if(last===today)return s;const yest=new Date(Date.now()-86400000).toDateString();const ns={count:(!last||last===yest)?s.count+1:1,last:Date.now()};try{localStorage.setItem('hs_streak',JSON.stringify(ns))}catch(e){}return ns}
+
+// === COSMOS ===
+!function(){const c=document.getElementById('cosmos'),x=c.getContext('2d');let p=[];function rs(){c.width=innerWidth;c.height=innerHeight}rs();addEventListener('resize',rs);class P{constructor(){this.reset()}reset(){this.x=Math.random()*c.width;this.y=Math.random()*c.height;this.s=Math.random()*2+.5;this.vx=(Math.random()-.5)*.25;this.vy=(Math.random()-.5)*.25;this.o=Math.random()*.5+.15;this.ph=Math.random()*Math.PI*2;this.ps=Math.random()*.015+.005;this.gold=Math.random()<.2;this.h=this.gold?40+Math.random()*10:210+Math.random()*30}update(){this.x+=this.vx;this.y+=this.vy;this.ph+=this.ps;if(this.x<0||this.x>c.width||this.y<0||this.y>c.height)this.reset()}draw(){const o=this.o*(.6+.4*Math.sin(this.ph));x.beginPath();x.arc(this.x,this.y,this.s,0,Math.PI*2);x.fillStyle=`hsla(${this.h},${this.gold?'70%':'75%'},${this.gold?'65%':'70%'},${o})`;x.fill();if(this.s>1.3){x.beginPath();x.arc(this.x,this.y,this.s*3,0,Math.PI*2);x.fillStyle=`hsla(${this.h},70%,65%,${o*.12})`;x.fill()}}}for(let i=0;i<100;i++)p.push(new P());!function a(){x.clearRect(0,0,c.width,c.height);p.forEach(q=>{q.update();q.draw()});requestAnimationFrame(a)}()}();
+
+// === NAVIGATION ===
+function goTo(s){document.querySelectorAll('.screen').forEach(e=>e.classList.remove('active'));setTimeout(()=>{document.getElementById('screen-'+s).classList.add('active');if(s==='voice')initV('vv','vrt');if(s==='rerecord')initV('rr-viz','rr-text');if(s==='dashboard')popDash();if(s==='settings')popSettings();if(s==='editgoals')popEditGoals()},50)}
+function showErr(m){const t=document.getElementById('err');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000)}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function timeAgo(ts){const d=Date.now()-ts;if(d<60000)return'Just now';if(d<3600000)return Math.floor(d/60000)+'m ago';if(d<86400000)return Math.floor(d/3600000)+'h ago';return Math.floor(d/86400000)+'d ago'}
+function openLM(){document.getElementById('lm').classList.add('show')}
+function closeLM(){document.getElementById('lm').classList.remove('show')}
+function setLang(l){S.lang=l;document.querySelectorAll('.lo').forEach(o=>o.classList.toggle('on',o.dataset.l===l));document.querySelector('.ll').innerHTML='🌐 '+l.toUpperCase()+' — Switch language';closeLM();save();fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:l})}).catch(()=>{})}
+
+// === GOALS (setup) ===
+function tg(el){el.classList.toggle('sel');const g=el.dataset.goal;if(S.goals.includes(g))S.goals=S.goals.filter(x=>x!==g);else S.goals.push(g);document.getElementById('goals-btn').disabled=!S.goals.length}
+async function submitGoals(){save();fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang})}).catch(()=>{});goTo('voice')}
+
+// === GOALS (edit) ===
+function tge(el){el.classList.toggle('sel');document.getElementById('save-goals-btn').disabled=!document.querySelectorAll('#edit-goals-grid .goal-card.sel').length}
+function popEditGoals(){document.querySelectorAll('#edit-goals-grid .goal-card').forEach(c=>{c.classList.toggle('sel',S.goals.includes(c.dataset.goal))})}
+function saveGoals(){S.goals=Array.from(document.querySelectorAll('#edit-goals-grid .goal-card.sel')).map(c=>c.dataset.goal);save();fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang})}).catch(()=>{});goTo('settings')}
+
+// === VOICE CLONING ===
+function initV(vizId,txtId){const v=document.getElementById(vizId);if(!v.children.length)for(let i=0;i<28;i++){const b=document.createElement('div');b.className='audio-bar';v.appendChild(b)}document.getElementById(txtId).textContent=RD}
+
+async function toggleRec(){if(S.isRec){stopR();return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});S.mr=new MediaRecorder(stream);S.chunks=[];S.mr.ondataavailable=e=>S.chunks.push(e.data);S.mr.stream=stream;S.mr.start();S.isRec=true;S.ac=new(AudioContext||webkitAudioContext)();const src=S.ac.createMediaStreamSource(stream);S.an=S.ac.createAnalyser();S.an.fftSize=64;src.connect(S.an);animViz('vv');const b=document.getElementById('vb');b.innerHTML='⏹ Tap When Done';b.style.cssText='background:rgba(255,80,80,.3);border:1px solid rgba(255,80,80,.4)';document.getElementById('vs').textContent='';document.getElementById('vt').textContent='🔴 Recording — read at your own pace'}catch(e){alert('Please allow microphone access.')}}
+
+function animViz(vizId){if(!S.isRec&&!S.rrRec)return;if(!S.an)return;const bars=document.querySelectorAll('#'+vizId+' .audio-bar'),d=new Uint8Array(S.an.frequencyBinCount);S.an.getByteFrequencyData(d);bars.forEach((b,i)=>{b.style.height=4+(d[i%d.length]||0)/255*36+'px';b.classList.add('on')});requestAnimationFrame(()=>animViz(vizId))}
+
+async function stopR(){S.isRec=false;if(S.ac){S.ac.close();S.ac=null;S.an=null}document.querySelectorAll('#vv .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')});document.getElementById('vb').classList.add('hidden');document.getElementById('vt').textContent='';document.getElementById('vs').textContent='Uploading and cloning your voice...';
+const blob=await waitBlob(S.mr,S.chunks);if(!blob||blob.size<1000){showErr('Recording too short');resetVoice('vb','vs','vt');return}
+const result=await uploadVoice(blob);if(result){document.getElementById('vs').textContent='';document.getElementById('vr').classList.add('hidden');document.getElementById('vok').classList.remove('hidden')}else{resetVoice('vb','vs','vt')}}
+
+// === RE-RECORD VOICE ===
+async function toggleReRec(){if(S.rrRec){stopReRec();return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});S.rrMr=new MediaRecorder(stream);S.rrChunks=[];S.rrMr.ondataavailable=e=>S.rrChunks.push(e.data);S.rrMr.stream=stream;S.rrMr.start();S.rrRec=true;S.ac=new(AudioContext||webkitAudioContext)();const src=S.ac.createMediaStreamSource(stream);S.an=S.ac.createAnalyser();S.an.fftSize=64;src.connect(S.an);animViz('rr-viz');const b=document.getElementById('rr-btn');b.innerHTML='⏹ Tap When Done';b.style.cssText='background:rgba(255,80,80,.3);border:1px solid rgba(255,80,80,.4)';document.getElementById('rr-status').textContent='';document.getElementById('rr-timer').textContent='🔴 Recording — read at your own pace'}catch(e){alert('Please allow microphone access.')}}
+
+async function stopReRec(){S.rrRec=false;if(S.ac){S.ac.close();S.ac=null;S.an=null}document.querySelectorAll('#rr-viz .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')});document.getElementById('rr-btn').classList.add('hidden');document.getElementById('rr-timer').textContent='';document.getElementById('rr-status').textContent='Uploading and cloning your voice...';
+const blob=await waitBlob(S.rrMr,S.rrChunks);if(!blob||blob.size<1000){showErr('Recording too short');resetVoice('rr-btn','rr-status','rr-timer');return}
+const result=await uploadVoice(blob);if(result){document.getElementById('rr-status').textContent='';document.getElementById('rr-readout').classList.add('hidden');document.getElementById('rr-ok').classList.remove('hidden')}else{resetVoice('rr-btn','rr-status','rr-timer')}}
+
+// === SHARED VOICE HELPERS ===
+function waitBlob(mr,chunks){return new Promise(r=>{if(!mr||mr.state==='inactive'){r(new Blob(chunks,{type:'audio/webm'}));return}mr.onstop=()=>{mr.stream.getTracks().forEach(t=>t.stop());r(new Blob(chunks,{type:'audio/webm'}))};mr.stop()})}
+
+async function uploadVoice(blob){try{const fd=new FormData();fd.append('audio',blob,'voice.webm');const res=await fetch('/api/clone-voice',{method:'POST',body:fd});if(!res.ok){let m='Voice cloning failed';try{m=(await res.json()).error||m}catch(e){}showErr(m);return false}
+const data=await res.json();if(data.success&&data.voiceId){S.voiceId=data.voiceId;save();return true}showErr(data.error||'Failed');return false}catch(e){showErr('Could not reach server: '+e.message);return false}}
+
+function resetVoice(btnId,statusId,timerId){const b=document.getElementById(btnId);b.classList.remove('hidden');b.innerHTML='🎙 Try Again';b.style='';document.getElementById(statusId).textContent='';document.getElementById(timerId).textContent=''}
+
+function reRecordVoice(){goTo('rerecord')}
+
+// === SETTINGS ===
+function popSettings(){document.getElementById('goals-status-set').textContent=S.goals.join(', ')||'None';document.getElementById('lang-status-set').textContent=LANGS[S.lang]||'English';document.getElementById('voice-status-set').textContent=S.voiceId?'Active — '+S.voiceId.slice(0,8)+'...':'Not set'}
+function editGoals(){goTo('editgoals')}
+function resetAll(){if(!confirm('This will erase all your data and start fresh. Are you sure?'))return;localStorage.removeItem('hs');localStorage.removeItem('hs_hist');localStorage.removeItem('hs_streak');S.voiceId=null;S.goals=[];fetch('/api/reset',{method:'POST'}).catch(()=>{});location.reload()}
+
+// === DASHBOARD ===
+function popDash(){
+  // Goals
+  document.getElementById('dg').innerHTML=S.goals.map(g=>'<div class="goal-row"><span>'+GI[g]+'</span> '+g+'</div>').join('')||'<p style="font-size:13px;color:var(--w3)">No goals set</p>';
+  // Stats
+  const h=getHist(),sk=getStreak();
+  const total=h.length,totalMin=Math.round(h.reduce((a,s)=>a+s.dur,0)/60);
+  document.getElementById('stats').innerHTML=
+    '<div class="stat-box"><div class="stat-num">'+(sk.count||0)+'</div><div class="stat-lbl">Day Streak</div></div>'+
+    '<div class="stat-box"><div class="stat-num">'+total+'</div><div class="stat-lbl">Sessions</div></div>'+
+    '<div class="stat-box"><div class="stat-num">'+totalMin+'</div><div class="stat-lbl">Minutes</div></div>';
+  document.getElementById('streak-badge').textContent=sk.count?'🔥 '+sk.count+' day'+(sk.count>1?'s':''):'';
+  // History
+  const hEl=document.getElementById('hist');
+  if(!h.length){hEl.innerHTML='<p style="font-size:13px;color:var(--w3)">No sessions yet — start one above!</p>';return}
+  hEl.innerHTML=h.slice(0,5).map(s=>'<div class="hist-row"><div class="hist-icon">'+(ICONS[s.type]||'💬')+'</div><div class="hist-info"><div class="hist-name">'+(NAMES[s.type]||'Session')+'</div><div class="hist-time">'+timeAgo(s.ts)+'</div></div><div class="hist-dur">'+fmt(s.dur)+'</div></div>').join('')}
+
+// === SESSIONS ===
+function startSession(type){S.sType=type;goTo('call');S.cs=0;S.callOn=false;S.trVis=false;
+document.getElementById('ctr').innerHTML='';document.getElementById('ctr').classList.add('hidden');
+document.getElementById('trt').textContent='Show Transcript';
+document.getElementById('st').innerHTML=ICONS[type]+' '+NAMES[type];
+document.getElementById('oi').textContent=ICONS[type];
+const cv=document.getElementById('cv');cv.innerHTML='';for(let i=0;i<36;i++){const b=document.createElement('div');b.className='audio-bar';cv.appendChild(b)}
+setTimeout(async()=>{S.callOn=true;document.getElementById('cs').textContent='Your Higher Self';document.getElementById('csub').textContent='Starting session...';document.getElementById('co').classList.add('on');document.getElementById('pr').style.display='flex';
+S.ct=setInterval(()=>{S.cs++;document.getElementById('ctm').textContent=fmt(S.cs)},1000);
+try{const res=await fetch('/api/coach/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang,sessionType:type})});const data=await res.json();if(data.success){addMsg(data.reply,'Higher Self');speakText(data.reply)}else showErr(data.error||'Could not start session')}catch(e){showErr('Connection error')}},1000)}
+
+function endCall(){const dur=S.cs;S.callOn=false;if(S.ct)clearInterval(S.ct);if(S.audio){S.audio.pause();S.audio=null}document.getElementById('pr').style.display='none';document.getElementById('co').classList.remove('on');
+// Save session to history
+if(dur>5){addHist(S.sType,dur);bumpStreak();save()}
+goTo('dashboard')}
+
+function toggleMute(){S.muted=!S.muted;document.getElementById('mi').textContent=S.muted?'🔈':'🔇';if(S.audio)S.audio.muted=S.muted}
+function toggleTr(){S.trVis=!S.trVis;document.getElementById('ctr').classList.toggle('hidden',!S.trVis);document.getElementById('trt').textContent=S.trVis?'Hide Transcript':'Show Transcript'}
+
+async function toggleTalk(){if(S.processing)return;if(S.talking){stopTalk();return}if(S.audio){S.audio.pause();S.audio=null}
+try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});S.tr=new MediaRecorder(stream);S.tc=[];S.tr.ondataavailable=e=>S.tc.push(e.data);S.tr.onstop=()=>{stream.getTracks().forEach(t=>t.stop());processS(new Blob(S.tc,{type:'audio/webm'}))};S.tr.start();S.talking=true;
+document.getElementById('tb').classList.add('rec');document.getElementById('ti').textContent='⏹';document.getElementById('th').textContent='Listening... tap to send';document.getElementById('csub').textContent='Listening...';
+S.ac=new(AudioContext||webkitAudioContext)();const src=S.ac.createMediaStreamSource(stream);S.an=S.ac.createAnalyser();S.an.fftSize=64;src.connect(S.an);animC()}catch(e){showErr('Microphone access needed')}}
+function stopTalk(){S.talking=false;if(S.tr&&S.tr.state!=='inactive')S.tr.stop();if(S.ac){S.ac.close();S.ac=null;S.an=null}document.getElementById('tb').classList.remove('rec');document.getElementById('ti').textContent='🎙';document.getElementById('th').textContent='Processing...';document.getElementById('csub').textContent='Processing...';resetCB()}
+function animC(){if(!S.talking||!S.an)return;const bars=document.querySelectorAll('#cv .audio-bar'),d=new Uint8Array(S.an.frequencyBinCount);S.an.getByteFrequencyData(d);bars.forEach((b,i)=>{b.style.height=4+(d[i%d.length]||0)/255*36+'px';b.classList.add('on')});requestAnimationFrame(animC)}
+function fakeViz(){if(!S.processing&&!(S.audio&&!S.audio.paused))return;document.querySelectorAll('#cv .audio-bar').forEach(b=>{b.style.height=4+Math.random()*28+'px';b.classList.add('on')});setTimeout(fakeViz,120)}
+function resetCB(){document.querySelectorAll('#cv .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')})}
+
+async function processS(blob){S.processing=true;fakeViz();try{const fd=new FormData();fd.append('audio',blob,'speech.webm');const res=await fetch('/api/transcribe',{method:'POST',body:fd});const data=await res.json();if(!data.success||!data.text){showErr(data.error||'Could not understand');S.processing=false;resetCB();ready();return}addMsg(data.text,'You',true);await getReply(data.text)}catch(e){showErr('Connection error');S.processing=false;resetCB();ready()}}
+async function getReply(msg){document.getElementById('csub').textContent='Thinking...';try{const res=await fetch('/api/coach/respond',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userMessage:msg,goals:S.goals,language:S.lang,sessionType:S.sType})});const data=await res.json();if(data.success){addMsg(data.reply,'Higher Self');speakText(data.reply)}else showErr(data.error||'Error')}catch(e){showErr('Connection error')}S.processing=false;if(!S.audio){resetCB();ready()}}
+async function speakText(text){document.getElementById('csub').textContent='Speaking in your voice...';fakeViz();try{const res=await fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});if(res.ok){const blob=await res.blob();S.audio=new Audio(URL.createObjectURL(blob));S.audio.muted=S.muted;S.audio.onended=()=>{S.audio=null;resetCB();ready()};S.audio.play()}else{resetCB();ready()}}catch(e){resetCB();ready()}}
+function ready(){document.getElementById('csub').textContent='Speaking in your voice';document.getElementById('th').textContent='Tap the mic to speak'}
+function addMsg(text,sender,isUser){const el=document.getElementById('ctr'),m=document.createElement('div');m.className='tmsg'+(isUser?' u':'');m.innerHTML='<p class="ts">'+sender+'</p><p class="tt">'+text+'</p>';el.appendChild(m);el.scrollTop=el.scrollHeight}
+
+// === BOOT ===
+!function(){const saved=load();if(saved&&saved.voiceId&&saved.goals&&saved.goals.length){
+  // Restore session on server
+  fetch('/api/restore',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({voiceId:saved.voiceId,goals:saved.goals,language:saved.lang||'en'})}).catch(()=>{});
+  // Set language
+  if(saved.lang){document.querySelectorAll('.lo').forEach(o=>o.classList.toggle('on',o.dataset.l===saved.lang));document.querySelector('.ll').innerHTML='🌐 '+(saved.lang||'en').toUpperCase()+' — Switch language'}
+  // Skip to dashboard
+  goTo('dashboard');
+}else{
+  // First time — show welcome
+}}();
+</script>
+</body>
+</html>
