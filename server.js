@@ -1,6 +1,4 @@
-const savedPort = process.env.PORT;
 require('dotenv').config();
-if (savedPort) process.env.PORT = savedPort;
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -221,7 +219,7 @@ app.post('/api/coach/start', async (req, res) => {
     const systemPrompt = prompts.system(goalsList, lang.systemLabel);
     const openerPrompt = prompts.opener(goalsList, lang.systemLabel);
     const response = await claudeCall({
-      max_tokens: 300, system: systemPrompt,
+      max_tokens: 150, system: systemPrompt,
       messages: [{ role: 'user', content: openerPrompt }]
     });
     const reply = response.content[0].text;
@@ -244,7 +242,7 @@ app.post('/api/coach/respond', async (req, res) => {
     sessions.conversationHistory.push({ role: 'user', content: userMessage });
     const systemPrompt = prompts.system(goalsList, lang.systemLabel);
     const messages = sessions.conversationHistory.slice(-12).map(m => ({ role: m.role, content: m.content }));
-    const response = await claudeCall({ max_tokens: 300, system: systemPrompt, messages });
+    const response = await claudeCall({ max_tokens: 150, system: systemPrompt, messages });
     const reply = response.content[0].text;
     sessions.conversationHistory.push({ role: 'assistant', content: reply });
     console.log(`🧠 [${type}]:`, reply);
@@ -258,10 +256,10 @@ app.post('/api/speak', async (req, res) => {
     if (!process.env.ELEVENLABS_API_KEY) return res.status(500).json({ error: 'ElevenLabs API key not configured' });
     const { text } = req.body;
     if (!sessions.voiceId) return res.status(400).json({ error: 'No cloned voice yet.' });
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${sessions.voiceId}`, {
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${sessions.voiceId}/stream?optimize_streaming_latency=3`, {
       method: 'POST',
       headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2', voice_settings: { stability: 0.5, similarity_boost: 0.85, style: 0.4, use_speaker_boost: true } })
+      body: JSON.stringify({ text, model_id: 'eleven_turbo_v2_5', voice_settings: { stability: 0.5, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true } })
     });
     if (!response.ok) { const e = await response.json().catch(() => ({})); return res.status(response.status).json({ error: e.detail || 'TTS failed' }); }
     res.set({ 'Content-Type': 'audio/mpeg', 'Transfer-Encoding': 'chunked' });
