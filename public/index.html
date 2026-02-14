@@ -107,6 +107,10 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
 /* Settings icon */
 .settings-btn{width:40px;height:40px;border-radius:12px;background:var(--w0);border:1px solid var(--w1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all .2s}
 .settings-btn:active{transform:scale(.93)}
+/* Step dots */
+.step-dot{width:10px;height:10px;border-radius:50%;background:var(--w1);transition:all .4s}
+.step-dot.active{background:var(--gold);box-shadow:0 0 10px var(--gold-g)}
+.step-dot.done{background:var(--gold-d)}
 @keyframes pulse{0%{transform:scale(.8);opacity:.5}100%{transform:scale(1.5);opacity:0}}
 @keyframes su{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
@@ -197,16 +201,23 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
     </div>
     <!-- Stats -->
     <div class="stat-grid" id="stats"></div>
-    <!-- Featured session -->
-    <div class="sess-card feat" onclick="startSession('free')">
-      <span class="si">💬</span>
-      <div><div class="sn">Free Conversation</div><div class="sd">Open coaching with your Higher Self</div></div>
+    <!-- Recommended For You -->
+    <div id="rec-card" class="sess-card feat" style="background:linear-gradient(135deg,rgba(232,184,75,.12),rgba(59,123,247,.1));border-color:var(--gold-d);cursor:pointer" onclick="startRecommended()">
+      <span class="si" id="rec-icon">☀️</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold-d);margin-bottom:4px" id="rec-label">Recommended For You</div>
+        <div class="sn" id="rec-name">Morning Motivation</div>
+        <div class="sd" id="rec-desc">Start your day with personalized affirmations</div>
+      </div>
     </div>
+    <!-- All Sessions -->
+    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--w3);margin-top:20px;margin-bottom:10px">All Sessions</p>
     <div class="session-grid">
       <div class="sess-card" onclick="startSession('morning')"><span class="si">☀️</span><div class="sn">Morning</div><div class="sd">Affirmations & energy</div></div>
       <div class="sess-card" onclick="startSession('visualization')"><span class="si">🌌</span><div class="sn">Visualization</div><div class="sd">Guided meditation</div></div>
       <div class="sess-card" onclick="startSession('evening')"><span class="si">🌙</span><div class="sn">Evening</div><div class="sd">Reflect & set intentions</div></div>
       <div class="sess-card" onclick="startSession('tough')"><span class="si">🔥</span><div class="sn">Tough Love</div><div class="sd">Accountability push</div></div>
+      <div class="sess-card" style="grid-column:1/-1;display:flex;align-items:center;gap:16px;text-align:left;padding:20px 22px" onclick="startSession('free')"><span class="si" style="margin-bottom:0;flex-shrink:0">💬</span><div><div class="sn">Free Conversation</div><div class="sd">Open coaching with your Higher Self</div></div></div>
     </div>
     <!-- Goals -->
     <div class="card" style="padding:20px;margin-top:18px">
@@ -286,7 +297,32 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
   </div>
 </div>
 
-<!-- CALL -->
+<!-- LISTEN MODE (Morning / Visualization) -->
+<div id="screen-listen" class="screen" style="justify-content:space-between">
+  <div style="display:flex;align-items:center;justify-content:space-between;width:100%;max-width:420px">
+    <div class="sess-tag" id="lt-tag">☀️ Morning Motivation</div>
+    <span id="lt-time" style="font-size:14px;color:var(--w3);font-variant-numeric:tabular-nums">00:00</span>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;width:100%">
+    <div style="position:relative;display:flex;align-items:center;justify-content:center">
+      <div class="pulse-rings" id="lt-pr"><div class="pulse-ring" style="width:180px;height:180px"></div><div class="pulse-ring" style="width:230px;height:230px;animation-delay:.4s"></div><div class="pulse-ring" style="width:280px;height:280px;animation-delay:.8s"></div></div>
+      <div id="lt-orb" class="call-orb"><span class="oi" id="lt-icon">☀️</span></div>
+    </div>
+    <p id="lt-text" style="font-size:16px;font-weight:600;color:var(--w9);margin-top:20px;text-align:center;max-width:340px;line-height:1.6;min-height:52px"></p>
+    <p id="lt-status" style="font-size:13px;color:var(--w3);margin-top:8px">Preparing...</p>
+    <!-- Step dots -->
+    <div id="lt-dots" style="display:flex;gap:8px;margin-top:16px"></div>
+  </div>
+  <div style="width:100%;max-width:420px">
+    <div id="lt-viz" class="audio-viz" style="margin-bottom:16px"></div>
+    <div style="display:flex;justify-content:center">
+      <button class="call-btn end" onclick="endListen()" style="width:56px;height:56px">✕</button>
+    </div>
+    <p style="text-align:center;font-size:12px;color:var(--w3);margin-top:10px">End session</p>
+  </div>
+</div>
+
+<!-- CALL (Talk mode: Evening / Tough Love / Free) -->
 <div id="screen-call" class="screen" style="justify-content:space-between">
   <div style="display:flex;align-items:center;justify-content:space-between;width:100%;max-width:420px">
     <button class="btn btn-sec" style="width:auto;padding:8px 14px;font-size:12px" onclick="toggleTr()"><span id="trt">Show Transcript</span></button>
@@ -481,6 +517,7 @@ function resetAll(){if(!confirm(t('reset_confirm')))return;localStorage.removeIt
 
 // === DASHBOARD ===
 function popDash(){
+  popRecommended();
   // Goals
   document.getElementById('dg').innerHTML=S.goals.map(g=>'<div class="goal-row"><span>'+GI[g]+'</span> '+g+'</div>').join('')||'<p style="font-size:13px;color:var(--w3)">'+t('no_goals')+'</p>';
   // Stats
@@ -496,8 +533,141 @@ function popDash(){
   if(!h.length){hEl.innerHTML='<p style="font-size:13px;color:var(--w3)">'+t('no_sessions')+'</p>';return}
   hEl.innerHTML=h.slice(0,5).map(s=>'<div class="hist-row"><div class="hist-icon">'+(ICONS[s.type]||'💬')+'</div><div class="hist-info"><div class="hist-name">'+NAMES(s.type)+'</div><div class="hist-time">'+timeAgo(s.ts)+'</div></div><div class="hist-dur">'+fmt(s.dur)+'</div></div>').join('')}
 
+// === LISTEN MODE (Morning / Visualization) ===
+const LISTEN_TYPES = {morning:true,visualization:true};
+const LISTEN_STEPS = {morning:6,visualization:6};
+const LISTEN_PAUSE = {morning:3500,visualization:5500};
+
+let listenState = {running:false,step:0,total:0,timer:null,seconds:0,audio:null,nextReady:null,type:null};
+
+function startListen(type){
+  listenState={running:true,step:0,total:LISTEN_STEPS[type],timer:null,seconds:0,audio:null,nextReady:null,type:type};
+  S.sType=type;goTo('listen');
+  document.getElementById('lt-tag').innerHTML=ICONS[type]+' '+NAMES(type);
+  document.getElementById('lt-icon').textContent=ICONS[type];
+  document.getElementById('lt-text').textContent='';
+  document.getElementById('lt-status').textContent=t('starting');
+  document.getElementById('lt-orb').classList.add('on');
+  document.getElementById('lt-pr').style.display='flex';
+  // Build step dots
+  const dots=document.getElementById('lt-dots');dots.innerHTML='';
+  for(let i=0;i<listenState.total;i++){const d=document.createElement('div');d.className='step-dot';dots.appendChild(d)}
+  // Build viz bars
+  const lv=document.getElementById('lt-viz');lv.innerHTML='';
+  for(let i=0;i<36;i++){const b=document.createElement('div');b.className='audio-bar';lv.appendChild(b)}
+  // Start timer
+  listenState.timer=setInterval(()=>{listenState.seconds++;document.getElementById('lt-time').textContent=fmt(listenState.seconds)},1000);
+  document.getElementById('lt-time').textContent='00:00';
+  // Start first step
+  setTimeout(()=>playNextStep(),500);
+}
+
+async function playNextStep(){
+  if(!listenState.running)return;
+  listenState.step++;
+  const step=listenState.step;
+  // Update dots
+  document.querySelectorAll('#lt-dots .step-dot').forEach((d,i)=>{
+    if(i<step-1)d.className='step-dot done';
+    else if(i===step-1)d.className='step-dot active';
+    else d.className='step-dot';
+  });
+  // Use prefetched or fetch new
+  let text;
+  if(listenState.nextReady){text=listenState.nextReady;listenState.nextReady=null}
+  else{
+    document.getElementById('lt-status').textContent=step===1?t('starting'):'...';
+    try{
+      const res=await fetch('/api/coach/listen-step',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang,sessionType:listenState.type,stepNumber:step,totalSteps:listenState.total})});
+      const data=await res.json();
+      if(!data.success){showErr(data.error||'Error');return}
+      text=data.reply;
+    }catch(e){showErr('Connection error');return}
+  }
+  // Show text
+  document.getElementById('lt-text').textContent=text;
+  document.getElementById('lt-status').textContent=t('speaking');
+  // Speak it
+  listenFakeViz();
+  try{
+    const res=await fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+    if(!res.ok){listenResetViz();advanceOrEnd();return}
+    const blob=await res.blob();
+    listenState.audio=new Audio(URL.createObjectURL(blob));
+    // Prefetch next step while audio plays
+    if(step<listenState.total)prefetchNext(step+1);
+    listenState.audio.onended=()=>{listenState.audio=null;listenResetViz();advanceOrEnd()};
+    listenState.audio.play();
+  }catch(e){listenResetViz();advanceOrEnd()}
+}
+
+async function prefetchNext(nextStep){
+  try{
+    const res=await fetch('/api/coach/listen-step',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang,sessionType:listenState.type,stepNumber:nextStep,totalSteps:listenState.total})});
+    const data=await res.json();
+    if(data.success)listenState.nextReady=data.reply;
+  }catch(e){}
+}
+
+function advanceOrEnd(){
+  if(!listenState.running)return;
+  if(listenState.step>=listenState.total){
+    // Done
+    document.getElementById('lt-status').textContent='✨';
+    document.getElementById('lt-text').textContent='';
+    document.querySelectorAll('#lt-dots .step-dot').forEach(d=>d.className='step-dot done');
+    setTimeout(()=>{if(listenState.running)endListen()},2000);
+    return;
+  }
+  // Pause then next
+  const pause=LISTEN_PAUSE[listenState.type]||4000;
+  document.getElementById('lt-status').textContent='';
+  setTimeout(()=>{if(listenState.running)playNextStep()},pause);
+}
+
+function endListen(){
+  const dur=listenState.seconds;
+  listenState.running=false;
+  if(listenState.timer)clearInterval(listenState.timer);
+  if(listenState.audio){listenState.audio.pause();listenState.audio=null}
+  document.getElementById('lt-pr').style.display='none';
+  document.getElementById('lt-orb').classList.remove('on');
+  listenResetViz();
+  if(dur>5){addHist(S.sType,dur);bumpStreak();save()}
+  goTo('dashboard');
+}
+
+function listenFakeViz(){if(!listenState.running)return;document.querySelectorAll('#lt-viz .audio-bar').forEach(b=>{b.style.height=4+Math.random()*28+'px';b.classList.add('on')});if(listenState.audio&&!listenState.audio.paused)setTimeout(listenFakeViz,120)}
+function listenResetViz(){document.querySelectorAll('#lt-viz .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')})}
+
+// === RECOMMENDED CARD ===
+function getRecommended(){
+  const h=new Date().getHours();
+  const hist=getHist();
+  const todayTypes=hist.filter(s=>new Date(s.ts).toDateString()===new Date().toDateString()).map(s=>s.type);
+  if(h<12&&!todayTypes.includes('morning'))return{type:'morning',reason:'morning'};
+  if(h>=17&&!todayTypes.includes('evening'))return{type:'evening',reason:'evening'};
+  if(!todayTypes.includes('visualization'))return{type:'visualization',reason:'weekly'};
+  if(!todayTypes.includes('tough'))return{type:'tough',reason:'push'};
+  return{type:'free',reason:'default'};
+}
+
+function popRecommended(){
+  const rec=getRecommended();
+  document.getElementById('rec-icon').textContent=ICONS[rec.type];
+  document.getElementById('rec-name').textContent=NAMES(rec.type);
+  const descs={morning:t('morning_desc'),visualization:t('vis_desc'),evening:t('eve_desc'),tough:t('tough_desc'),free:t('free_desc')};
+  document.getElementById('rec-desc').textContent=descs[rec.type]||'';
+  document.getElementById('rec-card').onclick=()=>startSession(rec.type);
+}
+
+function startRecommended(){const rec=getRecommended();startSession(rec.type)}
+
 // === SESSIONS ===
-function startSession(type){S.sType=type;goTo('call');S.cs=0;S.callOn=false;S.trVis=false;
+function startSession(type){
+  if(LISTEN_TYPES[type]){startListen(type);return}
+  // Talk mode
+  S.sType=type;goTo('call');S.cs=0;S.callOn=false;S.trVis=false;
 document.getElementById('ctr').innerHTML='';document.getElementById('ctr').classList.add('hidden');
 document.getElementById('trt').textContent='Show Transcript';
 document.getElementById('st').innerHTML=ICONS[type]+' '+NAMES(type);

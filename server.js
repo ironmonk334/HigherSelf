@@ -230,6 +230,46 @@ app.post('/api/coach/start', async (req, res) => {
   } catch (err) { console.error('Session start error:', err); res.status(500).json({ error: err.message }); }
 });
 
+// LISTEN-MODE: Generate next step for Morning/Visualization
+app.post('/api/coach/listen-step', async (req, res) => {
+  try {
+    if (!anthropic) return res.status(500).json({ error: 'Anthropic API key not configured' });
+    const { goals, language, sessionType, stepNumber, totalSteps } = req.body;
+    const lang = LANGUAGES[language] || LANGUAGES.en;
+    const goalsList = (goals || []).join(', ');
+
+    let prompt;
+    if (sessionType === 'morning') {
+      if (stepNumber === 1) {
+        prompt = `You are the user's Higher Self. Deliver a short warm greeting (1 sentence) then your FIRST powerful affirmation for someone whose goals are: ${goalsList}. Use present tense "I am..." or "I choose..." format. Keep it to 2 sentences total. In ${lang.systemLabel}.`;
+      } else if (stepNumber >= totalSteps) {
+        prompt = `You are the user's Higher Self. This is the FINAL affirmation (closing). Deliver one powerful closing affirmation, then a brief send-off like "Now go make it happen" or "Carry this energy with you today." 2 sentences max. Goals: ${goalsList}. In ${lang.systemLabel}. Do NOT ask any questions.`;
+      } else {
+        prompt = `You are the user's Higher Self. Deliver affirmation #${stepNumber} of ${totalSteps}. A fresh, powerful present-tense affirmation ("I am...", "I choose...", "Today I...") tied to their goals: ${goalsList}. Just the affirmation — 1-2 sentences. No preamble, no questions. In ${lang.systemLabel}.`;
+      }
+    } else if (sessionType === 'visualization') {
+      const stages = ['grounding and deep breathing', 'setting the scene of your future', 'seeing yourself achieving your goals', 'feeling the emotions of success', 'experiencing the details — what you see, hear, feel', 'bringing this energy back with you'];
+      const stage = stages[Math.min(stepNumber - 1, stages.length - 1)];
+      if (stepNumber === 1) {
+        prompt = `You are guiding a visualization meditation as the user's Higher Self. Step 1: Ask them to close their eyes, get comfortable, and guide them through 3 deep breaths. Calm, slow, meditative tone. 3 sentences. Goals: ${goalsList}. In ${lang.systemLabel}.`;
+      } else if (stepNumber >= totalSteps) {
+        prompt = `You are guiding a visualization meditation. FINAL step: Gently bring them back. Tell them to wiggle their fingers, take a deep breath, and open their eyes. Remind them they carry this vision with them. 2-3 sentences. Warm closing. In ${lang.systemLabel}. No questions.`;
+      } else {
+        prompt = `You are guiding a visualization meditation as the user's Higher Self. Step ${stepNumber}: Focus on "${stage}". Paint vivid sensory details about achieving their goals (${goalsList}). Calm, slow, meditative. 2-3 sentences only. No questions. In ${lang.systemLabel}.`;
+      }
+    }
+
+    const response = await claudeCall({
+      max_tokens: 100,
+      system: `You are delivering a ${sessionType === 'morning' ? 'morning affirmation' : 'guided visualization'} session. Be concise. No markdown. No asterisks. Just speak naturally. Always respond in ${lang.systemLabel}.`,
+      messages: [{ role: 'user', content: prompt }]
+    });
+    const reply = response.content[0].text;
+    console.log(`🧘 [${sessionType}] Step ${stepNumber}/${totalSteps}:`, reply);
+    res.json({ success: true, reply, stepNumber, totalSteps, done: stepNumber >= totalSteps });
+  } catch (err) { console.error('Listen step error:', err); res.status(500).json({ error: err.message }); }
+});
+
 // COACHING RESPOND
 app.post('/api/coach/respond', async (req, res) => {
   try {
