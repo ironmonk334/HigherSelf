@@ -15,7 +15,7 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;width:100%;background:linear-gradient(160deg,var(--bg) 0%,#091340 35%,var(--bg2) 65%,#070d22 100%);font-family:var(--font);color:var(--w);overflow-x:hidden;-webkit-font-smoothing:antialiased;font-size:16px}
 #cosmos{position:fixed;inset:0;z-index:0;pointer-events:none}
-.screen{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;padding:24px;padding-top:env(safe-area-inset-top,24px);padding-bottom:env(safe-area-inset-bottom,24px);opacity:0;transform:translateY(18px);transition:all .5s cubic-bezier(.16,1,.3,1);pointer-events:none;overflow-y:auto;justify-content:center}
+.screen{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;padding:24px;padding-top:env(safe-area-inset-top,24px);padding-bottom:calc(56px + env(safe-area-inset-bottom,24px));opacity:0;transform:translateY(18px);transition:all .5s cubic-bezier(.16,1,.3,1);pointer-events:none;overflow-y:auto;justify-content:center}
 .screen.active{opacity:1;transform:translateY(0);pointer-events:auto}
 .card{background:var(--card);backdrop-filter:blur(50px);-webkit-backdrop-filter:blur(50px);border-radius:24px;border:1px solid var(--w0);padding:36px 28px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4)}
 .label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--gold-d);margin-bottom:12px}
@@ -317,9 +317,64 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
 <script>
 const GI={Fitness:'💪',Finance:'💰',Relationships:'❤️',Mindset:'🧠',Career:'📈',Wellness:'🧘'};
 const ICONS={free:'💬',morning:'☀️',visualization:'🌌',evening:'🌙',tough:'🔥'};
-const NAMES={free:'Free Conversation',morning:'Morning Motivation',visualization:'Guided Visualization',evening:'Evening Reflection',tough:'Tough Love'};
-const LANGS={en:'English',fr:'Français',es:'Español'};
-const RD="I am becoming the person I was always meant to be. Every day I grow stronger, wiser, and more aligned with my true purpose. The challenges I face are building the resilience I need. The future I envision is already within reach. Every step I take brings me closer to the person I know I can be.";
+const LANGS_DISPLAY={en:'English',fr:'Français',es:'Español'};
+
+const I18N = {
+  en: {
+    names:{free:'Free Conversation',morning:'Morning Motivation',visualization:'Guided Visualization',evening:'Evening Reflection',tough:'Tough Love'},
+    reading:"I am becoming the person I was always meant to be. Every day I grow stronger, wiser, and more aligned with my true purpose. The challenges I face are building the resilience I need. The future I envision is already within reach. Every step I take brings me closer to the person I know I can be.",
+    welcome_tag:'HigherSelf',welcome_h1:'Coach yourself.<br>Literally.',welcome_sub:'Your voice. Your goals.<br>One conversation with the future you.',welcome_btn:'Get Started',
+    feat1:'Clones your<br>voice',feat2:'5 healing<br>session types',feat3:'AI coaching<br>in your voice',
+    step1:'Step 1 of 2',step2:'Step 2 of 2',goals_h:'What do you want to transform?',goals_sub:'Select all that apply.',goals_btn:'Continue',
+    voice_h:'Clone Your Voice',voice_sub:'Tap record, then read the passage below at your own pace.',voice_rec:'🎙 Start Recording',voice_done:'⏹ Tap When Done',voice_recording:'🔴 Recording — read at your own pace',voice_uploading:'Uploading and cloning your voice...',voice_success:'Voice Cloned Successfully',voice_success_sub:'Your Higher Self now speaks in your voice',voice_start:'Start Coaching',voice_retry:'🎙 Try Again',
+    free_desc:'Open coaching with your Higher Self',morning_desc:'Affirmations & energy',vis_desc:'Guided meditation',eve_desc:'Reflect & set intentions',tough_desc:'Accountability push',
+    goals_title:'🎯 Active Goals',recent_title:'📋 Recent Sessions',no_goals:'No goals set',no_sessions:'No sessions yet — start one above!',
+    streak_day:'Day Streak',stat_sess:'Sessions',stat_min:'Minutes',
+    settings:'Settings',set_voice:'Voice Clone',set_voice_sub:'Active',set_rerecord:'Re-record',set_goals:'Goals',set_edit:'Edit',set_lang:'Language',set_change:'Change',set_reset:'Reset Everything',set_reset_sub:'Start fresh — clears all data',set_reset_btn:'Reset',
+    edit_goals_h:'Edit Goals',save_goals:'Save Goals',
+    rerecord_h:'Re-record Your Voice',rerecord_sub:'Read the passage below at your own pace.',voice_updated:'Voice Updated',voice_updated_sub:'Your Higher Self now uses your new voice',back_dash:'Back to Dashboard',
+    show_tr:'Show Transcript',hide_tr:'Hide Transcript',connecting:'Connecting...',init:'Initializing...',starting:'Starting session...',listening:'Listening... tap to send',processing:'Processing...',thinking:'Thinking...',speaking:'Speaking in your voice...',speaking_ready:'Speaking in your voice',tap_mic:'Tap the mic to speak',higher_self:'Your Higher Self',
+    back:'Back',switch_lang:'Switch language',
+    reset_confirm:'This will erase all your data and start fresh. Are you sure?'
+  },
+  fr: {
+    names:{free:'Conversation Libre',morning:'Motivation Matinale',visualization:'Visualisation Guidée',evening:'Réflexion du Soir',tough:'Amour Dur'},
+    reading:"Je deviens la personne que j'ai toujours été destiné à être. Chaque jour, je deviens plus fort, plus sage et plus aligné avec mon vrai but. Les défis que j'affronte construisent la résilience dont j'ai besoin. L'avenir que j'envisage est déjà à ma portée. Chaque pas que je fais me rapproche de la personne que je sais pouvoir être.",
+    welcome_tag:'HigherSelf',welcome_h1:'Coache-toi.<br>Littéralement.',welcome_sub:'Ta voix. Tes objectifs.<br>Une conversation avec le futur toi.',welcome_btn:'Commencer',
+    feat1:'Clone ta<br>voix',feat2:'5 types de<br>séances',feat3:'Coaching IA<br>avec ta voix',
+    step1:'Étape 1 sur 2',step2:'Étape 2 sur 2',goals_h:'Que veux-tu transformer ?',goals_sub:'Sélectionne tout ce qui s\'applique.',goals_btn:'Continuer',
+    voice_h:'Clone Ta Voix',voice_sub:'Appuie sur enregistrer, puis lis le passage ci-dessous à ton rythme.',voice_rec:'🎙 Commencer l\'enregistrement',voice_done:'⏹ Appuie quand c\'est fini',voice_recording:'🔴 Enregistrement — lis à ton rythme',voice_uploading:'Téléchargement et clonage de ta voix...',voice_success:'Voix Clonée avec Succès',voice_success_sub:'Ton Moi Supérieur parle maintenant avec ta voix',voice_start:'Commencer le Coaching',voice_retry:'🎙 Réessayer',
+    free_desc:'Coaching ouvert avec ton Moi Supérieur',morning_desc:'Affirmations & énergie',vis_desc:'Méditation guidée',eve_desc:'Réfléchir & fixer des intentions',tough_desc:'Poussée de responsabilité',
+    goals_title:'🎯 Objectifs Actifs',recent_title:'📋 Séances Récentes',no_goals:'Aucun objectif défini',no_sessions:'Pas encore de séances — commence ci-dessus !',
+    streak_day:'Jours Consécutifs',stat_sess:'Séances',stat_min:'Minutes',
+    settings:'Paramètres',set_voice:'Clone Vocal',set_voice_sub:'Actif',set_rerecord:'Ré-enregistrer',set_goals:'Objectifs',set_edit:'Modifier',set_lang:'Langue',set_change:'Changer',set_reset:'Tout Réinitialiser',set_reset_sub:'Recommencer — efface toutes les données',set_reset_btn:'Réinitialiser',
+    edit_goals_h:'Modifier les Objectifs',save_goals:'Sauvegarder',
+    rerecord_h:'Ré-enregistrer Ta Voix',rerecord_sub:'Lis le passage ci-dessous à ton rythme.',voice_updated:'Voix Mise à Jour',voice_updated_sub:'Ton Moi Supérieur utilise maintenant ta nouvelle voix',back_dash:'Retour au Tableau de Bord',
+    show_tr:'Afficher Transcription',hide_tr:'Masquer Transcription',connecting:'Connexion...',init:'Initialisation...',starting:'Démarrage de la séance...',listening:'Écoute... appuie pour envoyer',processing:'Traitement...',thinking:'Réflexion...',speaking:'Parle avec ta voix...',speaking_ready:'Parle avec ta voix',tap_mic:'Appuie sur le micro pour parler',higher_self:'Ton Moi Supérieur',
+    back:'Retour',switch_lang:'Changer de langue',
+    reset_confirm:'Cela effacera toutes tes données et recommencera à zéro. Es-tu sûr ?'
+  },
+  es: {
+    names:{free:'Conversación Libre',morning:'Motivación Matutina',visualization:'Visualización Guiada',evening:'Reflexión Nocturna',tough:'Amor Duro'},
+    reading:"Me estoy convirtiendo en la persona que siempre estuve destinado a ser. Cada día me vuelvo más fuerte, más sabio y más alineado con mi verdadero propósito. Los desafíos que enfrento están construyendo la resiliencia que necesito. El futuro que imagino ya está a mi alcance. Cada paso que doy me acerca más a la persona que sé que puedo ser.",
+    welcome_tag:'HigherSelf',welcome_h1:'Entrénate.<br>Literalmente.',welcome_sub:'Tu voz. Tus metas.<br>Una conversación con el futuro tú.',welcome_btn:'Comenzar',
+    feat1:'Clona tu<br>voz',feat2:'5 tipos de<br>sesiones',feat3:'Coaching IA<br>con tu voz',
+    step1:'Paso 1 de 2',step2:'Paso 2 de 2',goals_h:'¿Qué quieres transformar?',goals_sub:'Selecciona todo lo que aplique.',goals_btn:'Continuar',
+    voice_h:'Clona Tu Voz',voice_sub:'Toca grabar, luego lee el pasaje a tu ritmo.',voice_rec:'🎙 Comenzar a Grabar',voice_done:'⏹ Toca Cuando Termines',voice_recording:'🔴 Grabando — lee a tu ritmo',voice_uploading:'Subiendo y clonando tu voz...',voice_success:'Voz Clonada Exitosamente',voice_success_sub:'Tu Yo Superior ahora habla con tu voz',voice_start:'Comenzar Coaching',voice_retry:'🎙 Intentar de Nuevo',
+    free_desc:'Coaching abierto con tu Yo Superior',morning_desc:'Afirmaciones y energía',vis_desc:'Meditación guiada',eve_desc:'Reflexionar y establecer intenciones',tough_desc:'Impulso de responsabilidad',
+    goals_title:'🎯 Metas Activas',recent_title:'📋 Sesiones Recientes',no_goals:'Sin metas definidas',no_sessions:'Aún no hay sesiones — ¡comienza arriba!',
+    streak_day:'Días Seguidos',stat_sess:'Sesiones',stat_min:'Minutos',
+    settings:'Configuración',set_voice:'Clon de Voz',set_voice_sub:'Activo',set_rerecord:'Re-grabar',set_goals:'Metas',set_edit:'Editar',set_lang:'Idioma',set_change:'Cambiar',set_reset:'Restablecer Todo',set_reset_sub:'Empezar de nuevo — borra todos los datos',set_reset_btn:'Restablecer',
+    edit_goals_h:'Editar Metas',save_goals:'Guardar',
+    rerecord_h:'Re-grabar Tu Voz',rerecord_sub:'Lee el pasaje a tu ritmo.',voice_updated:'Voz Actualizada',voice_updated_sub:'Tu Yo Superior ahora usa tu nueva voz',back_dash:'Volver al Panel',
+    show_tr:'Mostrar Transcripción',hide_tr:'Ocultar Transcripción',connecting:'Conectando...',init:'Inicializando...',starting:'Iniciando sesión...',listening:'Escuchando... toca para enviar',processing:'Procesando...',thinking:'Pensando...',speaking:'Hablando con tu voz...',speaking_ready:'Hablando con tu voz',tap_mic:'Toca el micrófono para hablar',higher_self:'Tu Yo Superior',
+    back:'Volver',switch_lang:'Cambiar idioma',
+    reset_confirm:'Esto borrará todos tus datos y empezará de nuevo. ¿Estás seguro?'
+  }
+};
+
+function t(key){return (I18N[S.lang]||I18N.en)[key]||(I18N.en)[key]||key}
+function NAMES(type){return (I18N[S.lang]||I18N.en).names[type]||type}
 
 const S={lang:'en',goals:[],isRec:false,mr:null,chunks:[],ac:null,an:null,callOn:false,ct:null,cs:0,muted:false,trVis:false,talking:false,processing:false,audio:null,tr:null,tc:[],sType:'free',voiceId:null,rrRec:false,rrMr:null,rrChunks:[]};
 
@@ -341,8 +396,47 @@ function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60)
 function timeAgo(ts){const d=Date.now()-ts;if(d<60000)return'Just now';if(d<3600000)return Math.floor(d/60000)+'m ago';if(d<86400000)return Math.floor(d/3600000)+'h ago';return Math.floor(d/86400000)+'d ago'}
 function openLM(){document.getElementById('lm').classList.add('show')}
 function closeLM(){document.getElementById('lm').classList.remove('show')}
-function setLang(l){S.lang=l;document.querySelectorAll('.lo').forEach(o=>o.classList.toggle('on',o.dataset.l===l));document.querySelector('.ll').innerHTML='🌐 '+l.toUpperCase()+' — Switch language';closeLM();save();fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:l})}).catch(()=>{})}
+function setLang(l){S.lang=l;document.querySelectorAll('.lo').forEach(o=>o.classList.toggle('on',o.dataset.l===l));closeLM();save();applyLang();fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:l})}).catch(()=>{})}
 
+function applyLang(){
+  const l=S.lang;
+  // Footer
+  document.querySelector('.ll').innerHTML='🌐 '+(LANGS_DISPLAY[l]||'English')+' — '+t('switch_lang');
+  // Welcome
+  const ws=document.getElementById('screen-welcome');
+  if(ws){ws.querySelector('h1').innerHTML=t('welcome_h1');ws.querySelector('.sub').innerHTML=t('welcome_sub');ws.querySelector('.btn-gold').textContent=t('welcome_btn');const feats=ws.querySelectorAll('[style*="text-align:center"] span:last-child');if(feats.length>=3){feats[0].innerHTML=t('feat1');feats[1].innerHTML=t('feat2');feats[2].innerHTML=t('feat3')}}
+  // Goals setup
+  document.querySelector('#screen-goals .label').textContent=t('step1');
+  document.querySelector('#screen-goals h2').textContent=t('goals_h');
+  document.querySelector('#screen-goals .sub').textContent=t('goals_sub');
+  document.getElementById('goals-btn').textContent=t('goals_btn');
+  // Voice clone
+  document.querySelector('#screen-voice .label').textContent=t('step2');
+  document.querySelector('#screen-voice h2').textContent=t('voice_h');
+  document.querySelector('#screen-voice .sub').textContent=t('voice_sub');
+  document.getElementById('vrt').textContent=t('reading');
+  if(!S.isRec&&document.getElementById('vb')&&!document.getElementById('vb').classList.contains('hidden'))document.getElementById('vb').innerHTML=t('voice_rec');
+  // Dashboard sessions
+  document.querySelector('.sess-card.feat .sn').textContent=NAMES('free');
+  document.querySelector('.sess-card.feat .sd').textContent=t('free_desc');
+  const sg=document.querySelectorAll('.session-grid .sess-card');
+  if(sg.length>=4){sg[0].querySelector('.sn').textContent=NAMES('morning');sg[0].querySelector('.sd').textContent=t('morning_desc');sg[1].querySelector('.sn').textContent=NAMES('visualization');sg[1].querySelector('.sd').textContent=t('vis_desc');sg[2].querySelector('.sn').textContent=NAMES('evening');sg[2].querySelector('.sd').textContent=t('eve_desc');sg[3].querySelector('.sn').textContent=NAMES('tough');sg[3].querySelector('.sd').textContent=t('tough_desc')}
+  // Dashboard cards
+  document.querySelector('#screen-dashboard .card h3').innerHTML=t('goals_title');
+  const histCard=document.querySelectorAll('#screen-dashboard .card')[1];if(histCard)histCard.querySelector('h3').innerHTML=t('recent_title');
+  // Settings
+  document.querySelector('#screen-settings h2').textContent=t('settings');
+  document.getElementById('lang-status-set').textContent=LANGS_DISPLAY[l]||'English';
+  // Edit goals
+  document.querySelector('#screen-editgoals h2').textContent=t('edit_goals_h');
+  document.getElementById('save-goals-btn').textContent=t('save_goals');
+  // Re-record
+  document.querySelector('#screen-rerecord h2').textContent=t('rerecord_h');
+  document.querySelector('#screen-rerecord .sub').textContent=t('rerecord_sub');
+  document.getElementById('rr-text').textContent=t('reading');
+  // Call screen
+  document.getElementById('th').textContent=t('tap_mic');
+}
 // === GOALS (setup) ===
 function tg(el){el.classList.toggle('sel');const g=el.dataset.goal;if(S.goals.includes(g))S.goals=S.goals.filter(x=>x!==g);else S.goals.push(g);document.getElementById('goals-btn').disabled=!S.goals.length}
 async function submitGoals(){save();fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang})}).catch(()=>{});goTo('voice')}
@@ -353,7 +447,7 @@ function popEditGoals(){document.querySelectorAll('#edit-goals-grid .goal-card')
 function saveGoals(){S.goals=Array.from(document.querySelectorAll('#edit-goals-grid .goal-card.sel')).map(c=>c.dataset.goal);save();fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang})}).catch(()=>{});goTo('settings')}
 
 // === VOICE CLONING ===
-function initV(vizId,txtId){const v=document.getElementById(vizId);if(!v.children.length)for(let i=0;i<28;i++){const b=document.createElement('div');b.className='audio-bar';v.appendChild(b)}document.getElementById(txtId).textContent=RD}
+function initV(vizId,txtId){const v=document.getElementById(vizId);if(!v.children.length)for(let i=0;i<28;i++){const b=document.createElement('div');b.className='audio-bar';v.appendChild(b)}document.getElementById(txtId).textContent=t('reading')}
 
 async function toggleRec(){if(S.isRec){stopR();return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});S.mr=new MediaRecorder(stream);S.chunks=[];S.mr.ondataavailable=e=>S.chunks.push(e.data);S.mr.stream=stream;S.mr.start();S.isRec=true;S.ac=new(AudioContext||webkitAudioContext)();const src=S.ac.createMediaStreamSource(stream);S.an=S.ac.createAnalyser();S.an.fftSize=64;src.connect(S.an);animViz('vv');const b=document.getElementById('vb');b.innerHTML='⏹ Tap When Done';b.style.cssText='background:rgba(255,80,80,.3);border:1px solid rgba(255,80,80,.4)';document.getElementById('vs').textContent='';document.getElementById('vt').textContent='🔴 Recording — read at your own pace'}catch(e){alert('Please allow microphone access.')}}
 
@@ -381,35 +475,35 @@ function resetVoice(btnId,statusId,timerId){const b=document.getElementById(btnI
 function reRecordVoice(){goTo('rerecord')}
 
 // === SETTINGS ===
-function popSettings(){document.getElementById('goals-status-set').textContent=S.goals.join(', ')||'None';document.getElementById('lang-status-set').textContent=LANGS[S.lang]||'English';document.getElementById('voice-status-set').textContent=S.voiceId?'Active — '+S.voiceId.slice(0,8)+'...':'Not set'}
+function popSettings(){document.getElementById('goals-status-set').textContent=S.goals.join(', ')||t('no_goals');document.getElementById('lang-status-set').textContent=LANGS_DISPLAY[S.lang]||'English';document.getElementById('voice-status-set').textContent=S.voiceId?t('set_voice_sub')+' — '+S.voiceId.slice(0,8)+'...':t('no_goals')}
 function editGoals(){goTo('editgoals')}
-function resetAll(){if(!confirm('This will erase all your data and start fresh. Are you sure?'))return;localStorage.removeItem('hs');localStorage.removeItem('hs_hist');localStorage.removeItem('hs_streak');S.voiceId=null;S.goals=[];fetch('/api/reset',{method:'POST'}).catch(()=>{});location.reload()}
+function resetAll(){if(!confirm(t('reset_confirm')))return;localStorage.removeItem('hs');localStorage.removeItem('hs_hist');localStorage.removeItem('hs_streak');S.voiceId=null;S.goals=[];fetch('/api/reset',{method:'POST'}).catch(()=>{});location.reload()}
 
 // === DASHBOARD ===
 function popDash(){
   // Goals
-  document.getElementById('dg').innerHTML=S.goals.map(g=>'<div class="goal-row"><span>'+GI[g]+'</span> '+g+'</div>').join('')||'<p style="font-size:13px;color:var(--w3)">No goals set</p>';
+  document.getElementById('dg').innerHTML=S.goals.map(g=>'<div class="goal-row"><span>'+GI[g]+'</span> '+g+'</div>').join('')||'<p style="font-size:13px;color:var(--w3)">'+t('no_goals')+'</p>';
   // Stats
   const h=getHist(),sk=getStreak();
   const total=h.length,totalMin=Math.round(h.reduce((a,s)=>a+s.dur,0)/60);
   document.getElementById('stats').innerHTML=
-    '<div class="stat-box"><div class="stat-num">'+(sk.count||0)+'</div><div class="stat-lbl">Day Streak</div></div>'+
-    '<div class="stat-box"><div class="stat-num">'+total+'</div><div class="stat-lbl">Sessions</div></div>'+
-    '<div class="stat-box"><div class="stat-num">'+totalMin+'</div><div class="stat-lbl">Minutes</div></div>';
+    '<div class="stat-box"><div class="stat-num">'+(sk.count||0)+'</div><div class="stat-lbl">'+t('streak_day')+'</div></div>'+
+    '<div class="stat-box"><div class="stat-num">'+total+'</div><div class="stat-lbl">'+t('stat_sess')+'</div></div>'+
+    '<div class="stat-box"><div class="stat-num">'+totalMin+'</div><div class="stat-lbl">'+t('stat_min')+'</div></div>';
   document.getElementById('streak-badge').textContent=sk.count?'🔥 '+sk.count+' day'+(sk.count>1?'s':''):'';
   // History
   const hEl=document.getElementById('hist');
-  if(!h.length){hEl.innerHTML='<p style="font-size:13px;color:var(--w3)">No sessions yet — start one above!</p>';return}
-  hEl.innerHTML=h.slice(0,5).map(s=>'<div class="hist-row"><div class="hist-icon">'+(ICONS[s.type]||'💬')+'</div><div class="hist-info"><div class="hist-name">'+(NAMES[s.type]||'Session')+'</div><div class="hist-time">'+timeAgo(s.ts)+'</div></div><div class="hist-dur">'+fmt(s.dur)+'</div></div>').join('')}
+  if(!h.length){hEl.innerHTML='<p style="font-size:13px;color:var(--w3)">'+t('no_sessions')+'</p>';return}
+  hEl.innerHTML=h.slice(0,5).map(s=>'<div class="hist-row"><div class="hist-icon">'+(ICONS[s.type]||'💬')+'</div><div class="hist-info"><div class="hist-name">'+NAMES(s.type)+'</div><div class="hist-time">'+timeAgo(s.ts)+'</div></div><div class="hist-dur">'+fmt(s.dur)+'</div></div>').join('')}
 
 // === SESSIONS ===
 function startSession(type){S.sType=type;goTo('call');S.cs=0;S.callOn=false;S.trVis=false;
 document.getElementById('ctr').innerHTML='';document.getElementById('ctr').classList.add('hidden');
 document.getElementById('trt').textContent='Show Transcript';
-document.getElementById('st').innerHTML=ICONS[type]+' '+NAMES[type];
+document.getElementById('st').innerHTML=ICONS[type]+' '+NAMES(type);
 document.getElementById('oi').textContent=ICONS[type];
 const cv=document.getElementById('cv');cv.innerHTML='';for(let i=0;i<36;i++){const b=document.createElement('div');b.className='audio-bar';cv.appendChild(b)}
-setTimeout(async()=>{S.callOn=true;document.getElementById('cs').textContent='Your Higher Self';document.getElementById('csub').textContent='Starting session...';document.getElementById('co').classList.add('on');document.getElementById('pr').style.display='flex';
+setTimeout(async()=>{S.callOn=true;document.getElementById('cs').textContent=t('higher_self');document.getElementById('csub').textContent=t('starting');document.getElementById('co').classList.add('on');document.getElementById('pr').style.display='flex';
 S.ct=setInterval(()=>{S.cs++;document.getElementById('ctm').textContent=fmt(S.cs)},1000);
 try{const res=await fetch('/api/coach/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang,sessionType:type})});const data=await res.json();if(data.success){addMsg(data.reply,'Higher Self');speakText(data.reply)}else showErr(data.error||'Could not start session')}catch(e){showErr('Connection error')}},1000)}
 
@@ -419,33 +513,31 @@ if(dur>5){addHist(S.sType,dur);bumpStreak();save()}
 goTo('dashboard')}
 
 function toggleMute(){S.muted=!S.muted;document.getElementById('mi').textContent=S.muted?'🔈':'🔇';if(S.audio)S.audio.muted=S.muted}
-function toggleTr(){S.trVis=!S.trVis;document.getElementById('ctr').classList.toggle('hidden',!S.trVis);document.getElementById('trt').textContent=S.trVis?'Hide Transcript':'Show Transcript'}
+function toggleTr(){S.trVis=!S.trVis;document.getElementById('ctr').classList.toggle('hidden',!S.trVis);document.getElementById('trt').textContent=S.trVis?t('hide_tr'):t('show_tr')}
 
 async function toggleTalk(){if(S.processing)return;if(S.talking){stopTalk();return}if(S.audio){S.audio.pause();S.audio=null}
 try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});S.tr=new MediaRecorder(stream);S.tc=[];S.tr.ondataavailable=e=>S.tc.push(e.data);S.tr.onstop=()=>{stream.getTracks().forEach(t=>t.stop());processS(new Blob(S.tc,{type:'audio/webm'}))};S.tr.start();S.talking=true;
-document.getElementById('tb').classList.add('rec');document.getElementById('ti').textContent='⏹';document.getElementById('th').textContent='Listening... tap to send';document.getElementById('csub').textContent='Listening...';
+document.getElementById('tb').classList.add('rec');document.getElementById('ti').textContent='⏹';document.getElementById('th').textContent=t('listening');document.getElementById('csub').textContent=t('listening');
 S.ac=new(AudioContext||webkitAudioContext)();const src=S.ac.createMediaStreamSource(stream);S.an=S.ac.createAnalyser();S.an.fftSize=64;src.connect(S.an);animC()}catch(e){showErr('Microphone access needed')}}
-function stopTalk(){S.talking=false;if(S.tr&&S.tr.state!=='inactive')S.tr.stop();if(S.ac){S.ac.close();S.ac=null;S.an=null}document.getElementById('tb').classList.remove('rec');document.getElementById('ti').textContent='🎙';document.getElementById('th').textContent='Processing...';document.getElementById('csub').textContent='Processing...';resetCB()}
+function stopTalk(){S.talking=false;if(S.tr&&S.tr.state!=='inactive')S.tr.stop();if(S.ac){S.ac.close();S.ac=null;S.an=null}document.getElementById('tb').classList.remove('rec');document.getElementById('ti').textContent='🎙';document.getElementById('th').textContent=t('processing');document.getElementById('csub').textContent=t('processing');resetCB()}
 function animC(){if(!S.talking||!S.an)return;const bars=document.querySelectorAll('#cv .audio-bar'),d=new Uint8Array(S.an.frequencyBinCount);S.an.getByteFrequencyData(d);bars.forEach((b,i)=>{b.style.height=4+(d[i%d.length]||0)/255*36+'px';b.classList.add('on')});requestAnimationFrame(animC)}
 function fakeViz(){if(!S.processing&&!(S.audio&&!S.audio.paused))return;document.querySelectorAll('#cv .audio-bar').forEach(b=>{b.style.height=4+Math.random()*28+'px';b.classList.add('on')});setTimeout(fakeViz,120)}
 function resetCB(){document.querySelectorAll('#cv .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')})}
 
 async function processS(blob){S.processing=true;fakeViz();try{const fd=new FormData();fd.append('audio',blob,'speech.webm');const res=await fetch('/api/transcribe',{method:'POST',body:fd});const data=await res.json();if(!data.success||!data.text){showErr(data.error||'Could not understand');S.processing=false;resetCB();ready();return}addMsg(data.text,'You',true);await getReply(data.text)}catch(e){showErr('Connection error');S.processing=false;resetCB();ready()}}
-async function getReply(msg){document.getElementById('csub').textContent='Thinking...';try{const res=await fetch('/api/coach/respond',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userMessage:msg,goals:S.goals,language:S.lang,sessionType:S.sType})});const data=await res.json();if(data.success){addMsg(data.reply,'Higher Self');speakText(data.reply)}else showErr(data.error||'Error')}catch(e){showErr('Connection error')}S.processing=false;if(!S.audio){resetCB();ready()}}
-async function speakText(text){document.getElementById('csub').textContent='Speaking in your voice...';fakeViz();try{const res=await fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});if(res.ok){const blob=await res.blob();S.audio=new Audio(URL.createObjectURL(blob));S.audio.muted=S.muted;S.audio.onended=()=>{S.audio=null;resetCB();ready()};S.audio.play()}else{resetCB();ready()}}catch(e){resetCB();ready()}}
-function ready(){document.getElementById('csub').textContent='Speaking in your voice';document.getElementById('th').textContent='Tap the mic to speak'}
-function addMsg(text,sender,isUser){const el=document.getElementById('ctr'),m=document.createElement('div');m.className='tmsg'+(isUser?' u':'');m.innerHTML='<p class="ts">'+sender+'</p><p class="tt">'+text+'</p>';el.appendChild(m);el.scrollTop=el.scrollHeight}
+async function getReply(msg){document.getElementById('csub').textContent=t('thinking');try{const res=await fetch('/api/coach/respond',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userMessage:msg,goals:S.goals,language:S.lang,sessionType:S.sType})});const data=await res.json();if(data.success){addMsg(data.reply,'Higher Self');speakText(data.reply)}else showErr(data.error||'Error')}catch(e){showErr('Connection error')}S.processing=false;if(!S.audio){resetCB();ready()}}
+async function speakText(text){document.getElementById('csub').textContent=t('speaking');fakeViz();try{const res=await fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});if(res.ok){const blob=await res.blob();S.audio=new Audio(URL.createObjectURL(blob));S.audio.muted=S.muted;S.audio.onended=()=>{S.audio=null;resetCB();ready()};S.audio.play()}else{resetCB();ready()}}catch(e){resetCB();ready()}}
+function ready(){document.getElementById('csub').textContent=t('speaking_ready');document.getElementById('th').textContent=t('tap_mic')}
+function addMsg(text,sender,isUser){const el=document.getElementById('ctr'),m=document.createElement('div');m.className='tmsg'+(isUser?' u':'');m.innerHTML='<p class="ts">'+(isUser?sender:t('higher_self'))+'</p><p class="tt">'+text+'</p>';el.appendChild(m);el.scrollTop=el.scrollHeight}
 
 // === BOOT ===
 !function(){const saved=load();if(saved&&saved.voiceId&&saved.goals&&saved.goals.length){
-  // Restore session on server
   fetch('/api/restore',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({voiceId:saved.voiceId,goals:saved.goals,language:saved.lang||'en'})}).catch(()=>{});
-  // Set language
-  if(saved.lang){document.querySelectorAll('.lo').forEach(o=>o.classList.toggle('on',o.dataset.l===saved.lang));document.querySelector('.ll').innerHTML='🌐 '+(saved.lang||'en').toUpperCase()+' — Switch language'}
-  // Skip to dashboard
+  if(saved.lang){document.querySelectorAll('.lo').forEach(o=>o.classList.toggle('on',o.dataset.l===saved.lang))}
+  applyLang();
   goTo('dashboard');
 }else{
-  // First time — show welcome
+  applyLang();
 }}();
 </script>
 </body>

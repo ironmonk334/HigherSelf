@@ -9,7 +9,7 @@ const fetch = require('node-fetch');
 const Anthropic = require('@anthropic-ai/sdk');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const upload = multer({ dest: path.join(__dirname, 'uploads'), limits: { fileSize: 25 * 1024 * 1024 } });
 app.use(express.json({ limit: '10mb' }));

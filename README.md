@@ -1,55 +1,26 @@
-# HigherSelf v4 — Setup Guide
+# HigherSelf
 
-## What's in this version
-- ✅ Works on iPhone, Android, and desktop
-- ✅ Only 3 API keys (no OpenAI needed)
-- ✅ English, French, Spanish support
-- ✅ Voice recording works on ALL phones (no browser speech recognition dependency)
+AI coaching app that clones your voice and speaks to you as your future self.
 
-## 🔑 Get Your API Keys (10 min)
+## Features
 
-### 1. Anthropic Claude (coaching brain)
-- Go to https://console.anthropic.com
-- Sign up → Settings → API Keys → Create Key
-- Copy key (starts with sk-ant-)
-- Add $5-10 billing credit
+- **Voice Cloning** — Clone your voice with ElevenLabs in seconds
+- **5 Session Types** — Morning Motivation, Guided Visualization, Evening Reflection, Tough Love, Free Conversation
+- **AI Coaching** — Powered by Claude, speaks as your future self
+- **Persistent** — Saves your voice, goals, session history, and streaks
+- **Multilingual** — English, French, Spanish
 
-### 2. ElevenLabs (voice cloning + speech)
-- Go to https://elevenlabs.io
-- Sign up → Profile → API key
-- Copy your key
+## Deploy to Railway
 
-### 3. Replicate (avatar generation)
-- Go to https://replicate.com
-- Sign up → Account → API tokens
-- Copy token (starts with r8_)
+1. Push this repo to GitHub
+2. Go to railway.app → New Project → Deploy from GitHub
+3. Add environment variables: ANTHROPIC_API_KEY and ELEVENLABS_API_KEY
+4. Done! Railway gives you a public URL.
 
-## 🔧 Configure (2 min)
+## Run Locally
 
-1. Copy .env.example → rename to .env
-2. Open .env in Notepad, paste your 3 keys
-3. Save
-
-## 🚀 Run
-
-Open PowerShell in this folder:
-
-    npm install
-    npm start
-
-Look for all 3 ✅ Connected, then open http://localhost:3000
-
-Phone: use the http://YOUR-IP:3000 URL shown (same WiFi)
-
-## How It Works
-
-1. Choose language → Select goals → Record voice → Take selfie
-2. AI generates your transformed future self avatar
-3. Call your Higher Self — tap mic, speak, hear yourself respond!
-
-## Troubleshooting
-
-- Voice cloning needs 10+ seconds of clear audio
-- Avatar takes 30-90 seconds to generate
-- .env must be named exactly .env (not .env.txt)
-- Phone must be on same WiFi as your PC
+```bash
+npm install
+# Create .env with your API keys (see .env.example)
+npm start
+```
