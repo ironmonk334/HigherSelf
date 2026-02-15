@@ -348,10 +348,11 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
 </div>
 
 <!-- SESSION INTRO OVERLAY -->
-<div id="session-intro" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(6,14,36,.95);display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center">
-  <div id="si-icon" style="font-size:48px;margin-bottom:20px">☀️</div>
-  <h2 id="si-title" style="font-size:22px;font-weight:800;margin-bottom:12px">Morning Motivation</h2>
-  <p id="si-desc" style="font-size:15px;color:var(--w6);line-height:1.7;max-width:320px"></p>
+<div id="session-intro" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(6,14,36,.97);flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center">
+  <div id="si-icon" style="font-size:56px;margin-bottom:20px">☀️</div>
+  <h2 id="si-title" style="font-size:24px;font-weight:800;margin-bottom:14px">Morning Motivation</h2>
+  <p id="si-desc" style="font-size:16px;color:var(--w6);line-height:1.7;max-width:320px;margin-bottom:32px"></p>
+  <button id="si-go" class="btn btn-gold" style="max-width:280px" onclick="dismissIntro()">I'm Ready</button>
 </div>
 
 <!-- LISTEN MODE (Morning / Visualization) -->
@@ -449,7 +450,8 @@ const I18N = {
     intro_vis:'Close your eyes and get comfortable. Your Higher Self will guide you through a visualization.',
     intro_evening:'This is a conversation. Your Higher Self will check in, then tap the mic to respond.',
     intro_tough:'This is a conversation. Your Higher Self will challenge you — tap the mic to respond.',
-    intro_free:'This is an open conversation. Your Higher Self will speak first, then tap the mic to talk.'
+    intro_free:'This is an open conversation. Your Higher Self will speak first, then tap the mic to talk.',
+    im_ready:'I\'m Ready'
   },
   fr: {
     names:{free:'Conversation Libre',morning:'Motivation Matinale',visualization:'Visualisation Guidée',evening:'Réflexion du Soir',tough:'Amour Dur'},
@@ -487,7 +489,8 @@ const I18N = {
     intro_vis:'Ferme les yeux et installe-toi. Ton Moi Supérieur va te guider à travers une visualisation.',
     intro_evening:'C\'est une conversation. Ton Moi Supérieur va te parler, puis appuie sur le micro pour répondre.',
     intro_tough:'C\'est une conversation. Ton Moi Supérieur va te challenger — appuie sur le micro pour répondre.',
-    intro_free:'C\'est une conversation ouverte. Ton Moi Supérieur va parler en premier, puis appuie sur le micro.'
+    intro_free:'C\'est une conversation ouverte. Ton Moi Supérieur va parler en premier, puis appuie sur le micro.',
+    im_ready:'Je suis prêt'
   },
   es: {
     names:{free:'Conversación Libre',morning:'Motivación Matutina',visualization:'Visualización Guiada',evening:'Reflexión Nocturna',tough:'Amor Duro'},
@@ -525,7 +528,8 @@ const I18N = {
     intro_vis:'Cierra los ojos y ponte cómodo. Tu Yo Superior te guiará a través de una visualización.',
     intro_evening:'Es una conversación. Tu Yo Superior te hablará, luego toca el micrófono para responder.',
     intro_tough:'Es una conversación. Tu Yo Superior te desafiará — toca el micrófono para responder.',
-    intro_free:'Es una conversación abierta. Tu Yo Superior hablará primero, luego toca el micrófono.'
+    intro_free:'Es una conversación abierta. Tu Yo Superior hablará primero, luego toca el micrófono.',
+    im_ready:'Estoy listo'
   }
 };
 
@@ -948,13 +952,19 @@ function startRecommended(){const rec=getRecommended();startSession(rec.type)}
 var audioUnlocked=false;
 function unlockAudio(){if(audioUnlocked)return;try{var ctx=new(AudioContext||webkitAudioContext)();var buf=ctx.createBuffer(1,1,22050);var src=ctx.createBufferSource();src.buffer=buf;src.connect(ctx.destination);src.start(0);ctx.resume();audioUnlocked=true;setTimeout(()=>ctx.close(),100)}catch(e){}}
 const INTRO_KEYS={morning:'intro_morning',visualization:'intro_vis',evening:'intro_evening',tough:'intro_tough',free:'intro_free'};
+var introCallback=null;
 function showIntro(type,cb){
-  const el=document.getElementById('session-intro');
+  var el=document.getElementById('session-intro');
   document.getElementById('si-icon').textContent=ICONS[type];
   document.getElementById('si-title').textContent=NAMES(type);
   document.getElementById('si-desc').textContent=t(INTRO_KEYS[type]);
+  document.getElementById('si-go').textContent=t('im_ready');
+  introCallback=cb;
   el.style.display='flex';
-  setTimeout(()=>{el.style.display='none';cb()},3500);
+}
+function dismissIntro(){
+  document.getElementById('session-intro').style.display='none';
+  if(introCallback){var cb=introCallback;introCallback=null;cb()}
 }
 
 // === SESSIONS ===

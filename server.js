@@ -57,7 +57,7 @@ Your role:
 - Build energy gradually — start calm, build to powerful
 - Keep each response to 2-3 sentences
 - Be warm but powerful — this sets the tone for their entire day`,
-    opener: (goals, lang) => `Start a morning motivation session. Say good morning as their future self, then deliver 3 powerful affirmations addressed TO them using "you" statements based on their goals (${goals}). Example: "You are exactly where you need to be." In ${lang}. Under 4 sentences.`
+    opener: (goals, lang) => `Start a morning motivation session. The user is already settled and ready. Jump straight into it: greet them briefly as their future self, then deliver 3 powerful affirmations addressed TO them using "you" statements based on their goals (${goals}). Example: "You are exactly where you need to be." In ${lang}. Under 4 sentences.`
   },
   visualization: {
     system: (goals, lang) => `You are guiding the user through a visualization meditation as their Higher Self. You speak TO the user, guiding them gently.
@@ -69,7 +69,7 @@ Your role:
 - Paint vivid sensory details about THEIR future
 - Keep each response to 2-3 sentences
 - This is a meditation. Slow, deliberate, calming. No questions.`,
-    opener: (goals, lang) => `Begin a guided visualization session. Ask them to find a comfortable position and close their eyes. Guide them through 3 deep breaths using "you" language: "Take a slow deep breath in..." Calm and meditative. In ${lang}.`
+    opener: (goals, lang) => `Begin a guided visualization session. The user has already been told to close their eyes and get comfortable. Go straight into guiding them through 3 deep breaths: "Breathe in slowly... hold... and release." Calm and meditative. In ${lang}.`
   },
   evening: {
     system: (goals, lang) => `You are the user's Higher Self conducting an evening reflection. You speak TO the user with warmth, like a wise friend checking in.
@@ -81,7 +81,7 @@ Your role:
 - Help reframe challenges: "What did that teach you?"
 - Keep responses to 2-3 sentences, warm and supportive
 - Always address them as "you"`,
-    opener: (goals, lang) => `Start an evening reflection. Greet them warmly — "Hey, you made it through another day." Ask how their day went around their goals (${goals}). Be genuinely curious. 2-3 sentences. In ${lang}.`
+    opener: (goals, lang) => `Start an evening reflection. The user is ready and listening. Greet them warmly — "Hey, you made it through another day." Ask how their day went around their goals (${goals}). Be genuinely curious. 2-3 sentences. In ${lang}.`
   },
   tough: {
     system: (goals, lang) => `You are the user's Higher Self in "tough love" mode. You speak TO the user directly, firmly, but with love. You're the version of them who stopped making excuses.
@@ -266,7 +266,7 @@ app.post('/api/coach/listen-step', async (req, res) => {
     let prompt;
     if (sessionType === 'morning') {
       if (stepNumber === 1) {
-        prompt = `You are the user's Higher Self speaking TO them. Deliver a warm greeting (1 sentence) then your FIRST affirmation addressed to the user. Use "you" statements: "You are ready", "You have the strength". Goals: ${goalsList}. 2 sentences total. In ${lang.systemLabel}.`;
+        prompt = `You are the user's Higher Self speaking TO them. The user is already settled and listening. Jump straight in with a brief warm greeting (1 sentence) then your FIRST affirmation addressed to them. Use "you" statements: "You are ready", "You have the strength". Goals: ${goalsList}. 2 sentences total. In ${lang.systemLabel}.`;
       } else if (stepNumber >= totalSteps) {
         prompt = `You are the user's Higher Self. FINAL affirmation (closing). Deliver one powerful closing affirmation using "you", then a send-off like "Now go show the world what you're made of." 2 sentences max. Goals: ${goalsList}. In ${lang.systemLabel}. No questions.`;
       } else {
@@ -276,7 +276,7 @@ app.post('/api/coach/listen-step', async (req, res) => {
       const stages = ['grounding and deep breathing', 'setting the scene of your future', 'seeing yourself achieving your goals', 'feeling the emotions of success', 'experiencing the details — what you see, hear, feel', 'bringing this energy back with you'];
       const stage = stages[Math.min(stepNumber - 1, stages.length - 1)];
       if (stepNumber === 1) {
-        prompt = `You are guiding the user through a visualization. Step 1: Tell them to close their eyes, get comfortable. Guide them through 3 deep breaths: "Breathe in slowly... and release." Always say "you". 3 sentences. In ${lang.systemLabel}.`;
+        prompt = `You are guiding the user through a visualization. Step 1: The user is already settled with eyes closed. Go straight into guiding 3 deep breaths: "Breathe in slowly... hold... and gently release." Then set the scene: "Now, let's journey forward together..." 3 sentences. In ${lang.systemLabel}.`;
       } else if (stepNumber >= totalSteps) {
         prompt = `Visualization FINAL step: Gently bring them back. "Wiggle your fingers... take one more deep breath... and when you're ready, open your eyes." Remind them they carry this vision with them. 2-3 sentences. In ${lang.systemLabel}. No questions.`;
       } else {
