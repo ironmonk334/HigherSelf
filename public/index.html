@@ -525,68 +525,91 @@ function applyLang(){
   const l=S.lang;
   const goalKeys={Fitness:'goal_fitness',Finance:'goal_finance',Relationships:'goal_relationships',Mindset:'goal_mindset',Career:'goal_career',Wellness:'goal_wellness'};
   // Footer
-  document.querySelector('.ll').innerHTML='🌐 '+(LANGS_DISPLAY[l]||'English')+' — '+t('switch_lang');
+  document.querySelector('.ll').innerHTML='\u{1F310} '+(LANGS_DISPLAY[l]||'English')+' \u2014 '+t('switch_lang');
+  // ALL back buttons
+  document.querySelectorAll('.back-btn').forEach(function(b){
+    var svg=b.querySelector('svg');var svgHTML=svg?svg.outerHTML:'\u2190';
+    var txt=b.textContent.trim();
+    if(txt.includes('Dashboard')||txt.includes('Tableau')||txt.includes('Panel'))b.innerHTML=svgHTML+' '+t('back_dash');
+    else b.innerHTML=svgHTML+' '+t('back');
+  });
   // Welcome
-  const ws=document.getElementById('screen-welcome');
+  var ws=document.getElementById('screen-welcome');
   if(ws){
     ws.querySelector('h1').innerHTML=t('welcome_h1');
     ws.querySelector('.btn-gold').textContent=t('welcome_btn');
-    const wSub=document.getElementById('w-sub');if(wSub)wSub.innerHTML=t('hear_daily');
-    const wBacked=document.getElementById('w-backed');if(wBacked)wBacked.textContent=t('backed_research');
-    const wQuote=document.getElementById('w-quote');if(wQuote)wQuote.textContent=t('research_quote');
-    const wSrc=document.getElementById('w-src');if(wSrc)wSrc.textContent=t('research_src');
-    const wAlready=document.getElementById('w-already');if(wAlready)wAlready.textContent=t('already_account');
-    const wSignin=document.getElementById('w-signin');if(wSignin)wSignin.textContent=t('signin_link');
+    var wSub=document.getElementById('w-sub');if(wSub)wSub.innerHTML=t('hear_daily');
+    var wBacked=document.getElementById('w-backed');if(wBacked)wBacked.textContent=t('backed_research');
+    var wQuote=document.getElementById('w-quote');if(wQuote)wQuote.textContent=t('research_quote');
+    var wSrc=document.getElementById('w-src');if(wSrc)wSrc.textContent=t('research_src');
+    var wAlready=document.getElementById('w-already');if(wAlready)wAlready.textContent=t('already_account');
+    var wSignin=document.getElementById('w-signin');if(wSignin)wSignin.textContent=t('signin_link');
   }
   // Signup
-  const suH=document.getElementById('su-h');if(suH)suH.textContent=t('save_voice');
-  const suSub=document.getElementById('su-sub');if(suSub)suSub.textContent=t('save_voice_sub');
-  const suNameL=document.getElementById('su-name-label');if(suNameL)suNameL.textContent=t('first_name');
-  const suBtn=document.getElementById('su-btn');if(suBtn&&!suBtn.disabled)suBtn.textContent=t('goals_btn');
+  var suH=document.getElementById('su-h');if(suH)suH.textContent=t('save_voice');
+  var suSub2=document.getElementById('su-sub');if(suSub2)suSub2.textContent=t('save_voice_sub');
+  var suNameL=document.getElementById('su-name-label');if(suNameL)suNameL.textContent=t('first_name');
+  var suBtn=document.getElementById('su-btn');if(suBtn&&!suBtn.disabled)suBtn.textContent=t('goals_btn');
   // Signin
-  const siH=document.getElementById('si-h');if(siH)siH.textContent=t('welcome_back');
-  const siSub=document.getElementById('si-sub');if(siSub)siSub.textContent=t('welcome_back_sub');
-  const siEmailL=document.getElementById('si-email-label');if(siEmailL)siEmailL.textContent=t('email_label');
-  const siBtn=document.getElementById('si-btn');if(siBtn&&!siBtn.disabled)siBtn.textContent=t('signin_btn');
-  // Goals setup — translate goal card labels
+  var siH=document.getElementById('si-h');if(siH)siH.textContent=t('welcome_back');
+  var siSub2=document.getElementById('si-sub');if(siSub2)siSub2.textContent=t('welcome_back_sub');
+  var siEmailL=document.getElementById('si-email-label');if(siEmailL)siEmailL.textContent=t('email_label');
+  var siBtn=document.getElementById('si-btn');if(siBtn&&!siBtn.disabled)siBtn.textContent=t('signin_btn');
+  // Goals setup
   document.querySelector('#screen-goals .label').textContent=t('step1');
   document.querySelector('#screen-goals h2').textContent=t('goals_h');
   document.querySelector('#screen-goals .sub').textContent=t('goals_sub');
   document.getElementById('goals-btn').textContent=t('goals_btn');
-  document.querySelectorAll('#screen-goals .goal-card').forEach(c=>{const g=c.dataset.goal;c.querySelector('.gt').textContent=t(goalKeys[g])||g});
+  document.querySelectorAll('#screen-goals .goal-card').forEach(function(c){var g=c.dataset.goal;c.querySelector('.gt').textContent=t(goalKeys[g])||g});
   // Voice clone
   document.querySelector('#screen-voice .label').textContent=t('step2');
   document.querySelector('#screen-voice h2').textContent=t('voice_h');
   document.querySelector('#screen-voice .sub').textContent=t('voice_sub');
   document.getElementById('vrt').textContent=t('reading');
   if(!S.isRec&&document.getElementById('vb')&&!document.getElementById('vb').classList.contains('hidden'))document.getElementById('vb').innerHTML=t('voice_rec');
-  // Dashboard — recommended card
-  const recLabel=document.getElementById('rec-label');if(recLabel)recLabel.textContent=t('rec_for_you');
-  // Dashboard — "All Sessions" label
-  const allSessLabel=document.querySelector('#screen-dashboard .session-grid');
-  if(allSessLabel&&allSessLabel.previousElementSibling)allSessLabel.previousElementSibling.textContent=t('all_sessions');
-  // Dashboard — session cards
-  const sg=document.querySelectorAll('.session-grid .sess-card');
+  // Dashboard
+  var recLabel=document.getElementById('rec-label');if(recLabel)recLabel.textContent=t('rec_for_you');
+  var allSessEl=document.querySelector('#screen-dashboard .session-grid');
+  if(allSessEl&&allSessEl.previousElementSibling)allSessEl.previousElementSibling.textContent=t('all_sessions');
+  var sg=document.querySelectorAll('.session-grid .sess-card');
   if(sg.length>=5){sg[0].querySelector('.sn').textContent=NAMES('morning');sg[0].querySelector('.sd').textContent=t('morning_desc');sg[1].querySelector('.sn').textContent=NAMES('visualization');sg[1].querySelector('.sd').textContent=t('vis_desc');sg[2].querySelector('.sn').textContent=NAMES('evening');sg[2].querySelector('.sd').textContent=t('eve_desc');sg[3].querySelector('.sn').textContent=NAMES('tough');sg[3].querySelector('.sd').textContent=t('tough_desc');sg[4].querySelector('.sn').textContent=NAMES('free');sg[4].querySelector('.sd').textContent=t('free_desc')}
-  // Dashboard cards
   document.querySelector('#screen-dashboard .card h3').innerHTML=t('goals_title');
-  const histCard=document.querySelectorAll('#screen-dashboard .card')[1];if(histCard)histCard.querySelector('h3').innerHTML=t('recent_title');
-  // Settings
+  var histCard=document.querySelectorAll('#screen-dashboard .card')[1];if(histCard)histCard.querySelector('h3').innerHTML=t('recent_title');
+  // Settings — title and all rows
   document.querySelector('#screen-settings h2').textContent=t('settings');
+  var setRows=document.querySelectorAll('#screen-settings .set-row');
+  if(setRows.length>=5){
+    setRows[0].querySelector('.set-label').textContent=S.name||t('account_label');
+    setRows[0].querySelector('.set-action').textContent=t('logout_btn');
+    setRows[1].querySelector('.set-label').textContent=t('set_voice');
+    setRows[1].querySelector('.set-action').textContent=t('set_rerecord');
+    setRows[2].querySelector('.set-label').textContent=t('set_goals');
+    setRows[2].querySelector('.set-action').textContent=t('set_edit');
+    setRows[3].querySelector('.set-label').textContent=t('set_lang');
+    setRows[3].querySelector('.set-action').textContent=t('set_change');
+    setRows[4].querySelector('.set-label').textContent=t('set_reset');
+    setRows[4].querySelector('.set-sub').textContent=t('set_reset_sub');
+    setRows[4].querySelector('.set-action').textContent=t('set_reset_btn');
+  }
   document.getElementById('lang-status-set').textContent=LANGS_DISPLAY[l]||'English';
-  // Edit goals — translate goal card labels
+  // Edit goals
   document.querySelector('#screen-editgoals h2').textContent=t('edit_goals_h');
   document.getElementById('save-goals-btn').textContent=t('save_goals');
-  document.querySelectorAll('#edit-goals-grid .goal-card').forEach(c=>{const g=c.dataset.goal;c.querySelector('.gt').textContent=t(goalKeys[g])||g});
-  // Re-record
+  document.querySelectorAll('#edit-goals-grid .goal-card').forEach(function(c){var g=c.dataset.goal;c.querySelector('.gt').textContent=t(goalKeys[g])||g});
+  // Re-record — all elements
   document.querySelector('#screen-rerecord h2').textContent=t('rerecord_h');
   document.querySelector('#screen-rerecord .sub').textContent=t('rerecord_sub');
   document.getElementById('rr-text').textContent=t('reading');
+  var rrOkPs=document.querySelectorAll('#rr-ok p');
+  if(rrOkPs.length>=2){rrOkPs[0].textContent=t('voice_updated');rrOkPs[1].textContent=t('voice_updated_sub')}
+  var rrOkBtn=document.querySelector('#rr-ok .btn-gold');if(rrOkBtn)rrOkBtn.textContent=t('back_dash');
+  if(!S.rrRec){var rrBtn=document.getElementById('rr-btn');if(rrBtn&&!rrBtn.classList.contains('hidden'))rrBtn.innerHTML=t('voice_rec')}
   // Listen mode
-  const ltEnd=document.querySelector('#screen-listen p:last-child');if(ltEnd&&ltEnd.textContent.match(/End|Fin/i))ltEnd.textContent=t('end_session');
+  var ltEndP=document.querySelector('#screen-listen p[style*="text-align:center"]');if(ltEndP)ltEndP.textContent=t('end_session');
   // Call screen
   document.getElementById('th').textContent=t('tap_mic');
 }
+
 // === GOALS (setup) ===
 function tg(el){el.classList.toggle('sel');const g=el.dataset.goal;if(S.goals.includes(g))S.goals=S.goals.filter(x=>x!==g);else S.goals.push(g);document.getElementById('goals-btn').disabled=!S.goals.length}
 async function submitGoals(){save();fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang})}).catch(()=>{});goTo('voice')}
