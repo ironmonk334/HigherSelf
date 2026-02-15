@@ -105,6 +105,38 @@ Your role:
   }
 };
 
+// USER DATABASE (in-memory — replace with PostgreSQL for production)
+const users = {};
+
+// SIGNUP
+app.post('/api/signup', (req, res) => {
+  const { email, name, voiceId, goals, language } = req.body;
+  if (!email || !name) return res.status(400).json({ error: 'Name and email required' });
+  const key = email.toLowerCase().trim();
+  users[key] = { name, email: key, voiceId, goals: goals || [], language: language || 'en', createdAt: Date.now() };
+  // Also set active session
+  sessions.voiceId = voiceId;
+  sessions.goals = goals || [];
+  sessions.language = language || 'en';
+  console.log('👤 User signed up:', name, key, 'voiceId:', voiceId);
+  res.json({ success: true });
+});
+
+// SIGNIN
+app.post('/api/signin', (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email required' });
+  const key = email.toLowerCase().trim();
+  const user = users[key];
+  if (!user) return res.status(404).json({ error: 'No account found with that email' });
+  // Restore session
+  sessions.voiceId = user.voiceId;
+  sessions.goals = user.goals;
+  sessions.language = user.language;
+  console.log('🔑 User signed in:', user.name, key);
+  res.json({ success: true, name: user.name, voiceId: user.voiceId, goals: user.goals, language: user.language });
+});
+
 // SETUP
 app.post('/api/setup', (req, res) => {
   sessions.goals = req.body.goals || [];

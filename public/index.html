@@ -140,11 +140,11 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
     <div style="height:20px"></div>
     <div style="border-top:1px solid var(--w1);padding-top:16px;margin-bottom:20px">
       <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--w3);margin-bottom:12px">Backed by research</p>
-      <p style="font-size:14px;color:var(--w6);line-height:1.65;font-style:italic;padding:0 8px"><span style="color:var(--gold);font-size:18px;font-style:normal">"</span> <b style="color:var(--w9)">Your own voice</b> undergoes unique processing… listening to it may have a special neural basis for self-talk. <span style="color:var(--gold);font-size:18px;font-style:normal">"</span></p>
+      <p style="font-size:14px;color:var(--w6);line-height:1.65;font-style:italic;padding:0 8px"><span style="color:var(--gold);font-size:28px;font-family:Georgia,serif;font-style:normal;vertical-align:-4px;margin-right:2px">❝</span> <b style="color:var(--w9)">Your own voice</b> undergoes unique processing… listening to it may have a special neural basis for self-talk. <span style="color:var(--gold);font-size:28px;font-family:Georgia,serif;font-style:normal;vertical-align:-4px;margin-left:2px">❞</span></p>
       <p style="font-size:11px;color:var(--gold-d);margin-top:10px;font-weight:600">Peer-reviewed study, National Institutes of Health</p>
     </div>
     <button class="btn btn-gold" style="font-size:18px;padding:20px" onclick="goTo('goals')">Get Started</button>
-    <p style="font-size:13px;color:var(--w3);margin-top:16px">Already have an account? <a style="color:var(--w9);font-weight:700;text-decoration:none;cursor:pointer" onclick="goTo('goals')">Sign in</a></p>
+    <p style="font-size:13px;color:var(--w3);margin-top:16px">Already have an account? <a style="color:var(--w9);font-weight:700;text-decoration:none;cursor:pointer" onclick="goTo('signin')">Sign in</a></p>
   </div>
 </div>
 
@@ -182,10 +182,45 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
     <div id="vok" class="hidden">
       <div class="success-circle">✓</div>
       <p style="font-size:17px;font-weight:700;margin-bottom:6px">Voice Cloned Successfully</p>
-      <p style="font-size:14px;color:var(--w3);margin-bottom:24px">Your Higher Self now speaks in your voice</p>
-      <button class="btn btn-gold" onclick="goTo('dashboard')">Start Coaching</button>
+      <p id="vok-sub" style="font-size:14px;color:var(--w3);margin-bottom:24px">Playing your welcome message...</p>
+      <button id="vok-btn" class="btn btn-gold hidden" onclick="goTo('signup')">Continue</button>
     </div>
     <button id="vb" class="btn btn-gold" onclick="toggleRec()">🎙 Start Recording</button>
+  </div>
+</div>
+
+<!-- SIGNUP (after voice clone) -->
+<div id="screen-signup" class="screen">
+  <div class="card" style="text-align:center;padding:36px 28px">
+    <div style="font-size:40px;margin-bottom:16px">🔒</div>
+    <h2 style="font-size:24px">Save your voice</h2>
+    <p class="sub" style="margin-bottom:24px">So you can access your Higher Self from any device.</p>
+    <div style="text-align:left;margin-bottom:12px">
+      <label style="font-size:12px;font-weight:700;color:var(--w3);text-transform:uppercase;letter-spacing:.1em">First name</label>
+      <input id="su-name" type="text" placeholder="Sam" autocomplete="given-name" style="width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--w1);background:var(--w0);color:var(--w);font-size:16px;font-family:var(--font);margin-top:6px;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--gold-d)'" onblur="this.style.borderColor='var(--w1)'">
+    </div>
+    <div style="text-align:left;margin-bottom:24px">
+      <label style="font-size:12px;font-weight:700;color:var(--w3);text-transform:uppercase;letter-spacing:.1em">Email</label>
+      <input id="su-email" type="email" placeholder="sam@example.com" autocomplete="email" style="width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--w1);background:var(--w0);color:var(--w);font-size:16px;font-family:var(--font);margin-top:6px;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--gold-d)'" onblur="this.style.borderColor='var(--w1)'">
+    </div>
+    <button id="su-btn" class="btn btn-gold" onclick="doSignup()">Continue</button>
+    <p id="su-err" style="font-size:13px;color:#ff6b6b;margin-top:12px;min-height:20px"></p>
+  </div>
+</div>
+
+<!-- SIGNIN -->
+<div id="screen-signin" class="screen">
+  <div class="card" style="text-align:center;padding:36px 28px">
+    <button class="back-btn" style="text-align:left;width:100%" onclick="goTo('welcome')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <div style="font-size:40px;margin-bottom:16px">👋</div>
+    <h2 style="font-size:24px">Welcome back</h2>
+    <p class="sub" style="margin-bottom:24px">Enter your email to restore your voice and sessions.</p>
+    <div style="text-align:left;margin-bottom:24px">
+      <label style="font-size:12px;font-weight:700;color:var(--w3);text-transform:uppercase;letter-spacing:.1em">Email</label>
+      <input id="si-email" type="email" placeholder="sam@example.com" autocomplete="email" style="width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--w1);background:var(--w0);color:var(--w);font-size:16px;font-family:var(--font);margin-top:6px;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--gold-d)'" onblur="this.style.borderColor='var(--w1)'">
+    </div>
+    <button id="si-btn" class="btn btn-gold" onclick="doSignin()">Sign In</button>
+    <p id="si-err" style="font-size:13px;color:#ff6b6b;margin-top:12px;min-height:20px"></p>
   </div>
 </div>
 
@@ -238,6 +273,10 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
     <button class="back-btn" onclick="goTo('dashboard')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to Dashboard</button>
     <h2 style="margin-bottom:24px">Settings</h2>
     <div class="card" style="padding:20px">
+      <div class="set-row">
+        <div class="set-left"><span class="set-icon">👤</span><div><div class="set-label" id="set-name">Account</div><div class="set-sub" id="set-email">—</div></div></div>
+        <button class="set-action" onclick="doLogout()">Log out</button>
+      </div>
       <div class="set-row">
         <div class="set-left"><span class="set-icon">🎙</span><div><div class="set-label">Voice Clone</div><div class="set-sub" id="voice-status-set">Active</div></div></div>
         <button class="set-action" onclick="reRecordVoice()">Re-record</button>
@@ -412,11 +451,11 @@ const I18N = {
 function t(key){return (I18N[S.lang]||I18N.en)[key]||(I18N.en)[key]||key}
 function NAMES(type){return (I18N[S.lang]||I18N.en).names[type]||type}
 
-const S={lang:'en',goals:[],isRec:false,mr:null,chunks:[],ac:null,an:null,callOn:false,ct:null,cs:0,muted:false,trVis:false,talking:false,processing:false,audio:null,tr:null,tc:[],sType:'free',voiceId:null,rrRec:false,rrMr:null,rrChunks:[]};
+const S={lang:'en',goals:[],isRec:false,mr:null,chunks:[],ac:null,an:null,callOn:false,ct:null,cs:0,muted:false,trVis:false,talking:false,processing:false,audio:null,tr:null,tc:[],sType:'free',voiceId:null,rrRec:false,rrMr:null,rrChunks:[],name:null,email:null};
 
 // === PERSISTENCE ===
-function save(){try{localStorage.setItem('hs',JSON.stringify({voiceId:S.voiceId,goals:S.goals,lang:S.lang,history:getHist(),streak:getStreak()}))}catch(e){}}
-function load(){try{const d=JSON.parse(localStorage.getItem('hs'));if(d){S.voiceId=d.voiceId||null;S.goals=d.goals||[];S.lang=d.lang||'en';return d}}catch(e){}return null}
+function save(){try{localStorage.setItem('hs',JSON.stringify({voiceId:S.voiceId,goals:S.goals,lang:S.lang,name:S.name,email:S.email,history:getHist(),streak:getStreak()}))}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem('hs'));if(d){S.voiceId=d.voiceId||null;S.goals=d.goals||[];S.lang=d.lang||'en';S.name=d.name||null;S.email=d.email||null;return d}}catch(e){}return null}
 function getHist(){try{return JSON.parse(localStorage.getItem('hs_hist'))||[]}catch(e){return[]}}
 function addHist(type,dur){const h=getHist();h.unshift({type,dur,ts:Date.now()});if(h.length>20)h.pop();try{localStorage.setItem('hs_hist',JSON.stringify(h))}catch(e){}}
 function getStreak(){try{const d=JSON.parse(localStorage.getItem('hs_streak'));if(!d)return{count:0,last:null};const today=new Date().toDateString();const last=new Date(d.last).toDateString();const yest=new Date(Date.now()-86400000).toDateString();if(last===today)return d;if(last===yest)return d;return{count:0,last:null}}catch(e){return{count:0,last:null}}}
@@ -489,7 +528,7 @@ function animViz(vizId){if(!S.isRec&&!S.rrRec)return;if(!S.an)return;const bars=
 
 async function stopR(){S.isRec=false;if(S.ac){S.ac.close();S.ac=null;S.an=null}document.querySelectorAll('#vv .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')});document.getElementById('vb').classList.add('hidden');document.getElementById('vt').textContent='';document.getElementById('vs').textContent='Uploading and cloning your voice...';
 const blob=await waitBlob(S.mr,S.chunks);if(!blob||blob.size<1000){showErr('Recording too short');resetVoice('vb','vs','vt');return}
-const result=await uploadVoice(blob);if(result){document.getElementById('vs').textContent='';document.getElementById('vr').classList.add('hidden');document.getElementById('vok').classList.remove('hidden')}else{resetVoice('vb','vs','vt')}}
+const result=await uploadVoice(blob);if(result){document.getElementById('vs').textContent='';document.getElementById('vr').classList.add('hidden');document.getElementById('vok').classList.remove('hidden');playWelcomeMsg()}else{resetVoice('vb','vs','vt')}}
 
 // === RE-RECORD VOICE ===
 async function toggleReRec(){if(S.rrRec){stopReRec();return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});S.rrMr=new MediaRecorder(stream);S.rrChunks=[];S.rrMr.ondataavailable=e=>S.rrChunks.push(e.data);S.rrMr.stream=stream;S.rrMr.start();S.rrRec=true;S.ac=new(AudioContext||webkitAudioContext)();const src=S.ac.createMediaStreamSource(stream);S.an=S.ac.createAnalyser();S.an.fftSize=64;src.connect(S.an);animViz('rr-viz');const b=document.getElementById('rr-btn');b.innerHTML='⏹ Tap When Done';b.style.cssText='background:rgba(255,80,80,.3);border:1px solid rgba(255,80,80,.4)';document.getElementById('rr-status').textContent='';document.getElementById('rr-timer').textContent='🔴 Recording — read at your own pace'}catch(e){alert('Please allow microphone access.')}}
@@ -509,13 +548,86 @@ function resetVoice(btnId,statusId,timerId){const b=document.getElementById(btnI
 function reRecordVoice(){goTo('rerecord')}
 
 // === SETTINGS ===
-function popSettings(){document.getElementById('goals-status-set').textContent=S.goals.join(', ')||t('no_goals');document.getElementById('lang-status-set').textContent=LANGS_DISPLAY[S.lang]||'English';document.getElementById('voice-status-set').textContent=S.voiceId?t('set_voice_sub')+' — '+S.voiceId.slice(0,8)+'...':t('no_goals')}
+function popSettings(){
+  document.getElementById('goals-status-set').textContent=S.goals.join(', ')||t('no_goals');
+  document.getElementById('lang-status-set').textContent=LANGS_DISPLAY[S.lang]||'English';
+  document.getElementById('voice-status-set').textContent=S.voiceId?t('set_voice_sub')+' — '+S.voiceId.slice(0,8)+'...':t('no_goals');
+  document.getElementById('set-name').textContent=S.name||'Account';
+  document.getElementById('set-email').textContent=S.email||'Not signed in';
+}
 function editGoals(){goTo('editgoals')}
-function resetAll(){try{if(!confirm(t('reset_confirm')))return;localStorage.clear();S.voiceId=null;S.goals=[];S.lang='en';fetch('/api/reset',{method:'POST'}).catch(()=>{});window.location.href=window.location.origin}catch(e){alert('Reset failed: '+e.message)}}
+function resetAll(){try{if(!confirm(t('reset_confirm')))return;localStorage.clear();S.voiceId=null;S.goals=[];S.lang='en';S.name=null;S.email=null;fetch('/api/reset',{method:'POST'}).catch(()=>{});window.location.href=window.location.origin}catch(e){alert('Reset failed: '+e.message)}}
+
+// === WELCOME VOICE MESSAGE ===
+async function playWelcomeMsg(){
+  const sub=document.getElementById('vok-sub');
+  const btn=document.getElementById('vok-btn');
+  sub.textContent='Playing your welcome message...';
+  try{
+    const msg='Welcome to your Higher Self! I am now ready to coach you. Let us begin this journey together.';
+    const res=await fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:msg})});
+    if(res.ok){
+      const blob=await res.blob();
+      const audio=new Audio(URL.createObjectURL(blob));
+      audio.onended=()=>{sub.textContent='Your Higher Self is ready.';btn.classList.remove('hidden')};
+      audio.onerror=()=>{sub.textContent='Your Higher Self is ready.';btn.classList.remove('hidden')};
+      audio.play();
+    }else{sub.textContent='Your Higher Self is ready.';btn.classList.remove('hidden')}
+  }catch(e){sub.textContent='Your Higher Self is ready.';btn.classList.remove('hidden')}
+}
+
+// === SIGNUP ===
+async function doSignup(){
+  const name=document.getElementById('su-name').value.trim();
+  const email=document.getElementById('su-email').value.trim();
+  const err=document.getElementById('su-err');
+  err.textContent='';
+  if(!name){err.textContent='Please enter your name';return}
+  if(!email||!email.includes('@')){err.textContent='Please enter a valid email';return}
+  document.getElementById('su-btn').textContent='Saving...';document.getElementById('su-btn').disabled=true;
+  try{
+    const res=await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name,voiceId:S.voiceId,goals:S.goals,language:S.lang})});
+    const data=await res.json();
+    if(data.success){S.name=name;S.email=email;save();goTo('dashboard')}
+    else{err.textContent=data.error||'Signup failed'}
+  }catch(e){err.textContent='Connection error'}
+  document.getElementById('su-btn').textContent='Continue';document.getElementById('su-btn').disabled=false;
+}
+
+// === SIGNIN ===
+async function doSignin(){
+  const email=document.getElementById('si-email').value.trim();
+  const err=document.getElementById('si-err');
+  err.textContent='';
+  if(!email||!email.includes('@')){err.textContent='Please enter a valid email';return}
+  document.getElementById('si-btn').textContent='Signing in...';document.getElementById('si-btn').disabled=true;
+  try{
+    const res=await fetch('/api/signin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+    const data=await res.json();
+    if(data.success){
+      S.name=data.name;S.email=email;S.voiceId=data.voiceId;S.goals=data.goals;S.lang=data.language||'en';
+      save();
+      if(S.lang){document.querySelectorAll('.lo').forEach(o=>o.classList.toggle('on',o.dataset.l===S.lang))}
+      applyLang();goTo('dashboard');
+    }else{err.textContent=data.error||'Sign in failed'}
+  }catch(e){err.textContent='Connection error'}
+  document.getElementById('si-btn').textContent='Sign In';document.getElementById('si-btn').disabled=false;
+}
+
+// === LOGOUT ===
+function doLogout(){
+  if(!confirm('Log out? You can sign back in with your email.'))return;
+  localStorage.clear();S.voiceId=null;S.goals=[];S.lang='en';S.name=null;S.email=null;
+  window.location.href=window.location.origin;
+}
 
 // === DASHBOARD ===
 function popDash(){
   popRecommended();
+  // Greeting
+  const logo=document.querySelector('.dash-logo');
+  if(S.name&&logo)logo.innerHTML='<img src="/img/logo-96.png" alt=""> Hi, '+S.name+'!';
+  else if(logo)logo.innerHTML='<img src="/img/logo-96.png" alt=""> HigherSelf';
   // Goals
   document.getElementById('dg').innerHTML=S.goals.map(g=>'<div class="goal-row"><span>'+GI[g]+'</span> '+g+'</div>').join('')||'<p style="font-size:13px;color:var(--w3)">'+t('no_goals')+'</p>';
   // Stats
@@ -702,6 +814,7 @@ function addMsg(text,sender,isUser){const el=document.getElementById('ctr'),m=do
 !function(){const saved=load();if(saved&&saved.voiceId&&saved.goals&&saved.goals.length){
   fetch('/api/restore',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({voiceId:saved.voiceId,goals:saved.goals,language:saved.lang||'en'})}).catch(()=>{});
   if(saved.lang){document.querySelectorAll('.lo').forEach(o=>o.classList.toggle('on',o.dataset.l===saved.lang))}
+  S.name=saved.name||null;S.email=saved.email||null;
   applyLang();
   goTo('dashboard');
 }else{
