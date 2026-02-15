@@ -136,15 +136,15 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
     <img src="/img/logo-192.png" class="wl" alt="HigherSelf">
     <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-bottom:10px">HigherSelf</p>
     <h1 style="font-size:36px;line-height:1.1">Coach yourself.<br>Literally.</h1>
-    <p class="sub" style="margin-top:14px;font-size:16px;line-height:1.7">Your voice. Your goals.<br>One conversation with the future you.</p>
-    <div style="height:28px"></div>
-    <button class="btn btn-gold" style="font-size:18px;padding:20px" onclick="goTo('goals')">Get Started</button>
-    <div style="height:28px"></div>
-    <div style="display:flex;justify-content:center;gap:24px">
-      <div style="text-align:center"><span style="font-size:22px;display:block;margin-bottom:4px">🎙</span><span style="font-size:11px;color:var(--w3);line-height:1.4">Clones your<br>voice</span></div>
-      <div style="text-align:center"><span style="font-size:22px;display:block;margin-bottom:4px">🧘</span><span style="font-size:11px;color:var(--w3);line-height:1.4">5 healing<br>session types</span></div>
-      <div style="text-align:center"><span style="font-size:22px;display:block;margin-bottom:4px">🧠</span><span style="font-size:11px;color:var(--w3);line-height:1.4">AI coaching<br>in your voice</span></div>
+    <p class="sub" style="margin-top:14px;font-size:16px;line-height:1.7"><b>Hear daily</b> coaching in your own voice.</p>
+    <div style="height:20px"></div>
+    <div style="border-top:1px solid var(--w1);padding-top:16px;margin-bottom:20px">
+      <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--w3);margin-bottom:12px">Backed by research</p>
+      <p style="font-size:14px;color:var(--w6);line-height:1.65;font-style:italic;padding:0 8px"><span style="color:var(--gold);font-size:18px;font-style:normal">"</span> <b style="color:var(--w9)">Your own voice</b> undergoes unique processing… listening to it may have a special neural basis for self-talk. <span style="color:var(--gold);font-size:18px;font-style:normal">"</span></p>
+      <p style="font-size:11px;color:var(--gold-d);margin-top:10px;font-weight:600">Peer-reviewed study, National Institutes of Health</p>
     </div>
+    <button class="btn btn-gold" style="font-size:18px;padding:20px" onclick="goTo('goals')">Get Started</button>
+    <p style="font-size:13px;color:var(--w3);margin-top:16px">Already have an account? <a style="color:var(--w9);font-weight:700;text-decoration:none;cursor:pointer" onclick="goTo('goals')">Sign in</a></p>
   </div>
 </div>
 
@@ -440,7 +440,7 @@ function applyLang(){
   document.querySelector('.ll').innerHTML='🌐 '+(LANGS_DISPLAY[l]||'English')+' — '+t('switch_lang');
   // Welcome
   const ws=document.getElementById('screen-welcome');
-  if(ws){ws.querySelector('h1').innerHTML=t('welcome_h1');ws.querySelector('.sub').innerHTML=t('welcome_sub');ws.querySelector('.btn-gold').textContent=t('welcome_btn');const feats=ws.querySelectorAll('[style*="text-align:center"] span:last-child');if(feats.length>=3){feats[0].innerHTML=t('feat1');feats[1].innerHTML=t('feat2');feats[2].innerHTML=t('feat3')}}
+  if(ws){ws.querySelector('h1').innerHTML=t('welcome_h1');ws.querySelector('.btn-gold').textContent=t('welcome_btn')}
   // Goals setup
   document.querySelector('#screen-goals .label').textContent=t('step1');
   document.querySelector('#screen-goals h2').textContent=t('goals_h');
