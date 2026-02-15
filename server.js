@@ -299,7 +299,7 @@ app.post('/api/speak', async (req, res) => {
     const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${sessions.voiceId}/stream?optimize_streaming_latency=3`, {
       method: 'POST',
       headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, model_id: 'eleven_turbo_v2_5', voice_settings: { stability: 0.5, similarity_boost: 0.85, style: 0.3, use_speaker_boost: true } })
+      body: JSON.stringify({ text, model_id: 'eleven_flash_v2_5', voice_settings: { stability: 0.55, similarity_boost: 0.9, style: 0.25, use_speaker_boost: true } })
     });
     if (!response.ok) { const e = await response.json().catch(() => ({})); return res.status(response.status).json({ error: e.detail || 'TTS failed' }); }
     res.set({ 'Content-Type': 'audio/mpeg', 'Transfer-Encoding': 'chunked' });

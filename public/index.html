@@ -452,11 +452,9 @@ function applyLang(){
   document.querySelector('#screen-voice .sub').textContent=t('voice_sub');
   document.getElementById('vrt').textContent=t('reading');
   if(!S.isRec&&document.getElementById('vb')&&!document.getElementById('vb').classList.contains('hidden'))document.getElementById('vb').innerHTML=t('voice_rec');
-  // Dashboard sessions
-  document.querySelector('.sess-card.feat .sn').textContent=NAMES('free');
-  document.querySelector('.sess-card.feat .sd').textContent=t('free_desc');
+  // Dashboard - recommended card is dynamic, updated by popRecommended
   const sg=document.querySelectorAll('.session-grid .sess-card');
-  if(sg.length>=4){sg[0].querySelector('.sn').textContent=NAMES('morning');sg[0].querySelector('.sd').textContent=t('morning_desc');sg[1].querySelector('.sn').textContent=NAMES('visualization');sg[1].querySelector('.sd').textContent=t('vis_desc');sg[2].querySelector('.sn').textContent=NAMES('evening');sg[2].querySelector('.sd').textContent=t('eve_desc');sg[3].querySelector('.sn').textContent=NAMES('tough');sg[3].querySelector('.sd').textContent=t('tough_desc')}
+  if(sg.length>=5){sg[0].querySelector('.sn').textContent=NAMES('morning');sg[0].querySelector('.sd').textContent=t('morning_desc');sg[1].querySelector('.sn').textContent=NAMES('visualization');sg[1].querySelector('.sd').textContent=t('vis_desc');sg[2].querySelector('.sn').textContent=NAMES('evening');sg[2].querySelector('.sd').textContent=t('eve_desc');sg[3].querySelector('.sn').textContent=NAMES('tough');sg[3].querySelector('.sd').textContent=t('tough_desc');sg[4].querySelector('.sn').textContent=NAMES('free');sg[4].querySelector('.sd').textContent=t('free_desc')}
   // Dashboard cards
   document.querySelector('#screen-dashboard .card h3').innerHTML=t('goals_title');
   const histCard=document.querySelectorAll('#screen-dashboard .card')[1];if(histCard)histCard.querySelector('h3').innerHTML=t('recent_title');
@@ -513,7 +511,7 @@ function reRecordVoice(){goTo('rerecord')}
 // === SETTINGS ===
 function popSettings(){document.getElementById('goals-status-set').textContent=S.goals.join(', ')||t('no_goals');document.getElementById('lang-status-set').textContent=LANGS_DISPLAY[S.lang]||'English';document.getElementById('voice-status-set').textContent=S.voiceId?t('set_voice_sub')+' — '+S.voiceId.slice(0,8)+'...':t('no_goals')}
 function editGoals(){goTo('editgoals')}
-function resetAll(){if(!confirm(t('reset_confirm')))return;localStorage.removeItem('hs');localStorage.removeItem('hs_hist');localStorage.removeItem('hs_streak');S.voiceId=null;S.goals=[];fetch('/api/reset',{method:'POST'}).catch(()=>{});location.reload()}
+function resetAll(){try{if(!confirm(t('reset_confirm')))return;localStorage.clear();S.voiceId=null;S.goals=[];S.lang='en';fetch('/api/reset',{method:'POST'}).catch(()=>{});window.location.href=window.location.origin}catch(e){alert('Reset failed: '+e.message)}}
 
 // === DASHBOARD ===
 function popDash(){
@@ -538,10 +536,10 @@ const LISTEN_TYPES = {morning:true,visualization:true};
 const LISTEN_STEPS = {morning:6,visualization:6};
 const LISTEN_PAUSE = {morning:3500,visualization:5500};
 
-let listenState = {running:false,step:0,total:0,timer:null,seconds:0,audio:null,nextReady:null,type:null};
+let LS = {running:false,step:0,total:0,timer:null,seconds:0,audio:null,type:null,q:[]};
 
 function startListen(type){
-  listenState={running:true,step:0,total:LISTEN_STEPS[type],timer:null,seconds:0,audio:null,nextReady:null,type:type};
+  LS={running:true,step:0,total:LISTEN_STEPS[type],timer:null,seconds:0,audio:null,type:type,q:[]};
   S.sType=type;goTo('listen');
   document.getElementById('lt-tag').innerHTML=ICONS[type]+' '+NAMES(type);
   document.getElementById('lt-icon').textContent=ICONS[type];
@@ -549,96 +547,96 @@ function startListen(type){
   document.getElementById('lt-status').textContent=t('starting');
   document.getElementById('lt-orb').classList.add('on');
   document.getElementById('lt-pr').style.display='flex';
-  // Build step dots
   const dots=document.getElementById('lt-dots');dots.innerHTML='';
-  for(let i=0;i<listenState.total;i++){const d=document.createElement('div');d.className='step-dot';dots.appendChild(d)}
-  // Build viz bars
+  for(let i=0;i<LS.total;i++){const d=document.createElement('div');d.className='step-dot';dots.appendChild(d)}
   const lv=document.getElementById('lt-viz');lv.innerHTML='';
   for(let i=0;i<36;i++){const b=document.createElement('div');b.className='audio-bar';lv.appendChild(b)}
-  // Start timer
-  listenState.timer=setInterval(()=>{listenState.seconds++;document.getElementById('lt-time').textContent=fmt(listenState.seconds)},1000);
+  LS.timer=setInterval(()=>{LS.seconds++;document.getElementById('lt-time').textContent=fmt(LS.seconds)},1000);
   document.getElementById('lt-time').textContent='00:00';
-  // Start first step
-  setTimeout(()=>playNextStep(),500);
+  // Pre-queue first 3 steps (text+audio fetched in parallel)
+  for(let i=1;i<=Math.min(3,LS.total);i++) qStep(i);
+  setTimeout(()=>playQ(),500);
 }
 
-async function playNextStep(){
-  if(!listenState.running)return;
-  listenState.step++;
-  const step=listenState.step;
-  // Update dots
+function qStep(n){
+  if(n>LS.total||LS.q.find(q=>q.step===n))return;
+  const item={step:n,text:null,blob:null,ready:false};
+  LS.q.push(item);
+  fetchLText(n).then(txt=>{
+    item.text=txt;
+    if(!txt){item.ready=true;return}
+    return fetchLAudio(txt).then(b=>{item.blob=b;item.ready=true}).catch(()=>{item.ready=true});
+  }).catch(()=>{item.ready=true});
+}
+
+async function fetchLText(n){
+  try{
+    const r=await fetch('/api/coach/listen-step',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang,sessionType:LS.type,stepNumber:n,totalSteps:LS.total})});
+    const d=await r.json();return d.success?d.reply:null;
+  }catch(e){return null}
+}
+
+async function fetchLAudio(text){
+  try{
+    const r=await fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+    return r.ok?await r.blob():null;
+  }catch(e){return null}
+}
+
+async function playQ(){
+  if(!LS.running)return;
+  LS.step++;
+  const step=LS.step;
   document.querySelectorAll('#lt-dots .step-dot').forEach((d,i)=>{
-    if(i<step-1)d.className='step-dot done';
-    else if(i===step-1)d.className='step-dot active';
-    else d.className='step-dot';
+    d.className='step-dot'+(i<step-1?' done':'')+(i===step-1?' active':'');
   });
-  // Use prefetched or fetch new
-  let text;
-  if(listenState.nextReady){text=listenState.nextReady;listenState.nextReady=null}
-  else{
-    document.getElementById('lt-status').textContent=step===1?t('starting'):'...';
-    try{
-      const res=await fetch('/api/coach/listen-step',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang,sessionType:listenState.type,stepNumber:step,totalSteps:listenState.total})});
-      const data=await res.json();
-      if(!data.success){showErr(data.error||'Error');return}
-      text=data.reply;
-    }catch(e){showErr('Connection error');return}
+  let item=LS.q.find(q=>q.step===step);
+  if(!item){qStep(step);item=LS.q.find(q=>q.step===step)}
+  // Wait until audio is ready
+  if(item){while(!item.ready&&LS.running) await new Promise(r=>setTimeout(r,150))}
+  if(!LS.running)return;
+  // Keep 2 steps buffered ahead
+  qStep(step+1);qStep(step+2);
+  if(item&&item.text){
+    document.getElementById('lt-text').textContent=item.text;
+    document.getElementById('lt-status').textContent=t('speaking');
   }
-  // Show text
-  document.getElementById('lt-text').textContent=text;
-  document.getElementById('lt-status').textContent=t('speaking');
-  // Speak it
-  listenFakeViz();
-  try{
-    const res=await fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
-    if(!res.ok){listenResetViz();advanceOrEnd();return}
-    const blob=await res.blob();
-    listenState.audio=new Audio(URL.createObjectURL(blob));
-    // Prefetch next step while audio plays
-    if(step<listenState.total)prefetchNext(step+1);
-    listenState.audio.onended=()=>{listenState.audio=null;listenResetViz();advanceOrEnd()};
-    listenState.audio.play();
-  }catch(e){listenResetViz();advanceOrEnd()}
+  if(item&&item.blob){
+    lFakeViz();
+    LS.audio=new Audio(URL.createObjectURL(item.blob));
+    LS.audio.onended=()=>{LS.audio=null;lResetViz();lAdvance()};
+    LS.audio.play();
+  }else{lAdvance()}
 }
 
-async function prefetchNext(nextStep){
-  try{
-    const res=await fetch('/api/coach/listen-step',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang,sessionType:listenState.type,stepNumber:nextStep,totalSteps:listenState.total})});
-    const data=await res.json();
-    if(data.success)listenState.nextReady=data.reply;
-  }catch(e){}
-}
-
-function advanceOrEnd(){
-  if(!listenState.running)return;
-  if(listenState.step>=listenState.total){
-    // Done
-    document.getElementById('lt-status').textContent='✨';
+function lAdvance(){
+  if(!LS.running)return;
+  if(LS.step>=LS.total){
+    document.getElementById('lt-status').textContent='\u2728';
     document.getElementById('lt-text').textContent='';
     document.querySelectorAll('#lt-dots .step-dot').forEach(d=>d.className='step-dot done');
-    setTimeout(()=>{if(listenState.running)endListen()},2000);
+    setTimeout(()=>{if(LS.running)endListen()},2000);
     return;
   }
-  // Pause then next
-  const pause=LISTEN_PAUSE[listenState.type]||4000;
   document.getElementById('lt-status').textContent='';
-  setTimeout(()=>{if(listenState.running)playNextStep()},pause);
+  setTimeout(()=>{if(LS.running)playQ()},LISTEN_PAUSE[LS.type]||4000);
 }
 
 function endListen(){
-  const dur=listenState.seconds;
-  listenState.running=false;
-  if(listenState.timer)clearInterval(listenState.timer);
-  if(listenState.audio){listenState.audio.pause();listenState.audio=null}
+  const dur=LS.seconds;LS.running=false;
+  if(LS.timer)clearInterval(LS.timer);
+  if(LS.audio){LS.audio.pause();LS.audio=null}
+  LS.q=[];
   document.getElementById('lt-pr').style.display='none';
   document.getElementById('lt-orb').classList.remove('on');
-  listenResetViz();
+  lResetViz();
   if(dur>5){addHist(S.sType,dur);bumpStreak();save()}
   goTo('dashboard');
 }
 
-function listenFakeViz(){if(!listenState.running)return;document.querySelectorAll('#lt-viz .audio-bar').forEach(b=>{b.style.height=4+Math.random()*28+'px';b.classList.add('on')});if(listenState.audio&&!listenState.audio.paused)setTimeout(listenFakeViz,120)}
-function listenResetViz(){document.querySelectorAll('#lt-viz .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')})}
+function lFakeViz(){if(!LS.running)return;document.querySelectorAll('#lt-viz .audio-bar').forEach(b=>{b.style.height=4+Math.random()*28+'px';b.classList.add('on')});if(LS.audio&&!LS.audio.paused)setTimeout(lFakeViz,120)}
+function lResetViz(){document.querySelectorAll('#lt-viz .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')})}
+
 
 // === RECOMMENDED CARD ===
 function getRecommended(){
