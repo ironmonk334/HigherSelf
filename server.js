@@ -105,6 +105,7 @@ app.post('/api/signup', (req, res) => {
   const { email, name, voiceId, goals, language } = req.body;
   if (!email || !name) return res.status(400).json({ error: 'Name and email required' });
   const key = email.toLowerCase().trim();
+  if (users[key]) return res.status(409).json({ error: 'An account with this email already exists. Please sign in instead.' });
   users[key] = { name, email: key, voiceId, goals: goals || [], language: language || 'en', createdAt: Date.now() };
   // Also set active session
   sessions.voiceId = voiceId;
@@ -159,7 +160,7 @@ app.post('/api/clone-voice', upload.single('audio'), async (req, res) => {
     const formData = new FormData();
     formData.append('name', 'HigherSelf_' + Date.now());
     formData.append('description', 'HigherSelf voice clone');
-    formData.append('files', fs.createReadStream(audioPath), { filename: 'voice.webm', contentType: req.file.mimetype || 'audio/webm' });
+    formData.append('files', fs.createReadStream(audioPath), { filename: 'voice.' + (req.file.originalname.split('.').pop() || 'webm'), contentType: req.file.mimetype || 'audio/webm' });
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 60000);
     const response = await fetch('https://api.elevenlabs.io/v1/voices/add', {
@@ -189,7 +190,7 @@ app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
     const audioPath = req.file.path;
     const lang = LANGUAGES[sessions.language] || LANGUAGES.en;
     const formData = new FormData();
-    formData.append('file', fs.createReadStream(audioPath), { filename: 'speech.webm', contentType: req.file.mimetype || 'audio/webm' });
+    formData.append('file', fs.createReadStream(audioPath), { filename: 'speech.' + (req.file.originalname.split('.').pop() || 'webm'), contentType: req.file.mimetype || 'audio/webm' });
     formData.append('model_id', 'scribe_v1');
     formData.append('language_code', lang.speechCode);
     const response = await fetch('https://api.elevenlabs.io/v1/speech-to-text', {
