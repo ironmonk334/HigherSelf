@@ -136,15 +136,15 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
     <img src="/img/logo-192.png" class="wl" alt="HigherSelf">
     <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-bottom:10px">HigherSelf</p>
     <h1 style="font-size:36px;line-height:1.1">Coach yourself.<br>Literally.</h1>
-    <p class="sub" style="margin-top:14px;font-size:16px;line-height:1.7"><b>Hear daily</b> coaching in your own voice.</p>
+    <p id="w-sub" class="sub" style="margin-top:14px;font-size:16px;line-height:1.7"><b>Hear daily</b> coaching in your own voice.</p>
     <div style="height:20px"></div>
     <div style="border-top:1px solid var(--w1);padding-top:16px;margin-bottom:20px">
-      <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--w3);margin-bottom:12px">Backed by research</p>
-      <p style="font-size:14px;color:var(--w6);line-height:1.65;font-style:italic;padding:0 8px"><span style="color:var(--gold);font-size:28px;font-family:Georgia,serif;font-style:normal;vertical-align:-4px;margin-right:2px">❝</span> <b style="color:var(--w9)">Your own voice</b> undergoes unique processing… listening to it may have a special neural basis for self-talk. <span style="color:var(--gold);font-size:28px;font-family:Georgia,serif;font-style:normal;vertical-align:-4px;margin-left:2px">❞</span></p>
-      <p style="font-size:11px;color:var(--gold-d);margin-top:10px;font-weight:600">Peer-reviewed study, National Institutes of Health</p>
+      <p id="w-backed" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--w3);margin-bottom:12px">Backed by research</p>
+      <p style="font-size:14px;color:var(--w6);line-height:1.65;font-style:italic;padding:0 8px"><span style="color:var(--gold);font-size:28px;font-family:Georgia,serif;font-style:normal;vertical-align:-4px;margin-right:2px">❝</span> <b style="color:var(--w9)">Your own voice</b> <span id="w-quote">undergoes unique processing… listening to it may have a special neural basis for self-talk.</span> <span style="color:var(--gold);font-size:28px;font-family:Georgia,serif;font-style:normal;vertical-align:-4px;margin-left:2px">❞</span></p>
+      <p id="w-src" style="font-size:11px;color:var(--gold-d);margin-top:10px;font-weight:600">Peer-reviewed study, National Institutes of Health</p>
     </div>
     <button class="btn btn-gold" style="font-size:18px;padding:20px" onclick="goTo('goals')">Get Started</button>
-    <p style="font-size:13px;color:var(--w3);margin-top:16px">Already have an account? <a style="color:var(--w9);font-weight:700;text-decoration:none;cursor:pointer" onclick="goTo('signin')">Sign in</a></p>
+    <p style="font-size:13px;color:var(--w3);margin-top:16px"><span id="w-already">Already have an account?</span> <a id="w-signin" style="color:var(--w9);font-weight:700;text-decoration:none;cursor:pointer" onclick="goTo('signin')">Sign in</a></p>
   </div>
 </div>
 
@@ -193,10 +193,10 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
 <div id="screen-signup" class="screen">
   <div class="card" style="text-align:center;padding:36px 28px">
     <div style="font-size:40px;margin-bottom:16px">🔒</div>
-    <h2 style="font-size:24px">Save your voice</h2>
-    <p class="sub" style="margin-bottom:24px">So you can access your Higher Self from any device.</p>
+    <h2 id="su-h" style="font-size:24px">Save your voice</h2>
+    <p id="su-sub" class="sub" style="margin-bottom:24px">So you can access your Higher Self from any device.</p>
     <div style="text-align:left;margin-bottom:12px">
-      <label style="font-size:12px;font-weight:700;color:var(--w3);text-transform:uppercase;letter-spacing:.1em">First name</label>
+      <label id="su-name-label" style="font-size:12px;font-weight:700;color:var(--w3);text-transform:uppercase;letter-spacing:.1em">First name</label>
       <input id="su-name" type="text" placeholder="Sam" autocomplete="given-name" style="width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--w1);background:var(--w0);color:var(--w);font-size:16px;font-family:var(--font);margin-top:6px;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--gold-d)'" onblur="this.style.borderColor='var(--w1)'">
     </div>
     <div style="text-align:left;margin-bottom:24px">
@@ -213,10 +213,10 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
   <div class="card" style="text-align:center;padding:36px 28px">
     <button class="back-btn" style="text-align:left;width:100%" onclick="goTo('welcome')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
     <div style="font-size:40px;margin-bottom:16px">👋</div>
-    <h2 style="font-size:24px">Welcome back</h2>
-    <p class="sub" style="margin-bottom:24px">Enter your email to restore your voice and sessions.</p>
+    <h2 id="si-h" style="font-size:24px">Welcome back</h2>
+    <p id="si-sub" class="sub" style="margin-bottom:24px">Enter your email to restore your voice and sessions.</p>
     <div style="text-align:left;margin-bottom:24px">
-      <label style="font-size:12px;font-weight:700;color:var(--w3);text-transform:uppercase;letter-spacing:.1em">Email</label>
+      <label id="si-email-label" style="font-size:12px;font-weight:700;color:var(--w3);text-transform:uppercase;letter-spacing:.1em">Email</label>
       <input id="si-email" type="email" placeholder="sam@example.com" autocomplete="email" style="width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--w1);background:var(--w0);color:var(--w);font-size:16px;font-family:var(--font);margin-top:6px;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--gold-d)'" onblur="this.style.borderColor='var(--w1)'">
     </div>
     <button id="si-btn" class="btn btn-gold" onclick="doSignin()">Sign In</button>
@@ -410,7 +410,23 @@ const I18N = {
     rerecord_h:'Re-record Your Voice',rerecord_sub:'Read the passage below at your own pace.',voice_updated:'Voice Updated',voice_updated_sub:'Your Higher Self now uses your new voice',back_dash:'Back to Dashboard',
     show_tr:'Show Transcript',hide_tr:'Hide Transcript',connecting:'Connecting...',init:'Initializing...',starting:'Starting session...',listening:'Listening... tap to send',processing:'Processing...',thinking:'Thinking...',speaking:'Speaking in your voice...',speaking_ready:'Speaking in your voice',tap_mic:'Tap the mic to speak',higher_self:'Your Higher Self',
     back:'Back',switch_lang:'Switch language',
-    reset_confirm:'This will erase all your data and start fresh. Are you sure?'
+    reset_confirm:'This will erase all your data and start fresh. Are you sure?',
+    hear_daily:'<b>Hear daily</b> coaching in your own voice.',
+    backed_research:'Backed by research',
+    research_quote:'undergoes unique processing… listening to it may have a special neural basis for self-talk.',
+    research_src:'Peer-reviewed study, National Institutes of Health',
+    already_account:'Already have an account?',signin_link:'Sign in',
+    save_voice:'Save your voice',save_voice_sub:'So you can access your Higher Self from any device.',
+    first_name:'First name',email_label:'Email',
+    welcome_back:'Welcome back',welcome_back_sub:'Enter your email to restore your voice and sessions.',
+    signin_btn:'Sign In',
+    account_label:'Account',not_signed_in:'Not signed in',logout_btn:'Log out',
+    logout_confirm:'Log out? You can sign back in with your email.',
+    name_required:'Please enter your name',email_required:'Please enter a valid email',
+    saving:'Saving...',signing_in:'Signing in...',
+    welcome_msg_playing:'Playing your welcome message...',welcome_msg_ready:'Your Higher Self is ready.',
+    goal_fitness:'Fitness',goal_finance:'Finance',goal_relationships:'Relationships',goal_mindset:'Mindset',goal_career:'Career',goal_wellness:'Wellness',
+    rec_for_you:'Recommended For You',all_sessions:'All Sessions',end_session:'End session'
   },
   fr: {
     names:{free:'Conversation Libre',morning:'Motivation Matinale',visualization:'Visualisation Guidée',evening:'Réflexion du Soir',tough:'Amour Dur'},
@@ -427,7 +443,23 @@ const I18N = {
     rerecord_h:'Ré-enregistrer Ta Voix',rerecord_sub:'Lis le passage ci-dessous à ton rythme.',voice_updated:'Voix Mise à Jour',voice_updated_sub:'Ton Moi Supérieur utilise maintenant ta nouvelle voix',back_dash:'Retour au Tableau de Bord',
     show_tr:'Afficher Transcription',hide_tr:'Masquer Transcription',connecting:'Connexion...',init:'Initialisation...',starting:'Démarrage de la séance...',listening:'Écoute... appuie pour envoyer',processing:'Traitement...',thinking:'Réflexion...',speaking:'Parle avec ta voix...',speaking_ready:'Parle avec ta voix',tap_mic:'Appuie sur le micro pour parler',higher_self:'Ton Moi Supérieur',
     back:'Retour',switch_lang:'Changer de langue',
-    reset_confirm:'Cela effacera toutes tes données et recommencera à zéro. Es-tu sûr ?'
+    reset_confirm:'Cela effacera toutes tes données et recommencera à zéro. Es-tu sûr ?',
+    hear_daily:'<b>Écoute chaque jour</b> du coaching avec ta propre voix.',
+    backed_research:'Soutenu par la recherche',
+    research_quote:'subit un traitement unique… l\'écouter pourrait avoir une base neurale spéciale pour le discours intérieur.',
+    research_src:'Étude évaluée par les pairs, National Institutes of Health',
+    already_account:'Tu as déjà un compte ?',signin_link:'Se connecter',
+    save_voice:'Sauvegarde ta voix',save_voice_sub:'Pour accéder à ton Moi Supérieur depuis n\'importe quel appareil.',
+    first_name:'Prénom',email_label:'Email',
+    welcome_back:'Bon retour',welcome_back_sub:'Entre ton email pour restaurer ta voix et tes séances.',
+    signin_btn:'Se connecter',
+    account_label:'Compte',not_signed_in:'Non connecté',logout_btn:'Déconnexion',
+    logout_confirm:'Se déconnecter ? Tu peux te reconnecter avec ton email.',
+    name_required:'Entre ton prénom',email_required:'Entre un email valide',
+    saving:'Sauvegarde...',signing_in:'Connexion...',
+    welcome_msg_playing:'Lecture de ton message de bienvenue...',welcome_msg_ready:'Ton Moi Supérieur est prêt.',
+    goal_fitness:'Forme',goal_finance:'Finance',goal_relationships:'Relations',goal_mindset:'Mentalité',goal_career:'Carrière',goal_wellness:'Bien-être',
+    rec_for_you:'Recommandé Pour Toi',all_sessions:'Toutes les Séances',end_session:'Fin de séance'
   },
   es: {
     names:{free:'Conversación Libre',morning:'Motivación Matutina',visualization:'Visualización Guiada',evening:'Reflexión Nocturna',tough:'Amor Duro'},
@@ -444,7 +476,23 @@ const I18N = {
     rerecord_h:'Re-grabar Tu Voz',rerecord_sub:'Lee el pasaje a tu ritmo.',voice_updated:'Voz Actualizada',voice_updated_sub:'Tu Yo Superior ahora usa tu nueva voz',back_dash:'Volver al Panel',
     show_tr:'Mostrar Transcripción',hide_tr:'Ocultar Transcripción',connecting:'Conectando...',init:'Inicializando...',starting:'Iniciando sesión...',listening:'Escuchando... toca para enviar',processing:'Procesando...',thinking:'Pensando...',speaking:'Hablando con tu voz...',speaking_ready:'Hablando con tu voz',tap_mic:'Toca el micrófono para hablar',higher_self:'Tu Yo Superior',
     back:'Volver',switch_lang:'Cambiar idioma',
-    reset_confirm:'Esto borrará todos tus datos y empezará de nuevo. ¿Estás seguro?'
+    reset_confirm:'Esto borrará todos tus datos y empezará de nuevo. ¿Estás seguro?',
+    hear_daily:'<b>Escucha cada día</b> coaching con tu propia voz.',
+    backed_research:'Respaldado por investigación',
+    research_quote:'experimenta un procesamiento único… escucharla puede tener una base neural especial para el diálogo interno.',
+    research_src:'Estudio revisado por pares, National Institutes of Health',
+    already_account:'¿Ya tienes una cuenta?',signin_link:'Iniciar sesión',
+    save_voice:'Guarda tu voz',save_voice_sub:'Para acceder a tu Yo Superior desde cualquier dispositivo.',
+    first_name:'Nombre',email_label:'Email',
+    welcome_back:'Bienvenido de vuelta',welcome_back_sub:'Ingresa tu email para restaurar tu voz y sesiones.',
+    signin_btn:'Iniciar sesión',
+    account_label:'Cuenta',not_signed_in:'Sin sesión iniciada',logout_btn:'Cerrar sesión',
+    logout_confirm:'¿Cerrar sesión? Puedes volver a iniciar sesión con tu email.',
+    name_required:'Ingresa tu nombre',email_required:'Ingresa un email válido',
+    saving:'Guardando...',signing_in:'Iniciando sesión...',
+    welcome_msg_playing:'Reproduciendo tu mensaje de bienvenida...',welcome_msg_ready:'Tu Yo Superior está listo.',
+    goal_fitness:'Fitness',goal_finance:'Finanzas',goal_relationships:'Relaciones',goal_mindset:'Mentalidad',goal_career:'Carrera',goal_wellness:'Bienestar',
+    rec_for_you:'Recomendado Para Ti',all_sessions:'Todas las Sesiones',end_session:'Fin de sesión'
   }
 };
 
@@ -475,23 +523,49 @@ function setLang(l){S.lang=l;document.querySelectorAll('.lo').forEach(o=>o.class
 
 function applyLang(){
   const l=S.lang;
+  const goalKeys={Fitness:'goal_fitness',Finance:'goal_finance',Relationships:'goal_relationships',Mindset:'goal_mindset',Career:'goal_career',Wellness:'goal_wellness'};
   // Footer
   document.querySelector('.ll').innerHTML='🌐 '+(LANGS_DISPLAY[l]||'English')+' — '+t('switch_lang');
   // Welcome
   const ws=document.getElementById('screen-welcome');
-  if(ws){ws.querySelector('h1').innerHTML=t('welcome_h1');ws.querySelector('.btn-gold').textContent=t('welcome_btn')}
-  // Goals setup
+  if(ws){
+    ws.querySelector('h1').innerHTML=t('welcome_h1');
+    ws.querySelector('.btn-gold').textContent=t('welcome_btn');
+    const wSub=document.getElementById('w-sub');if(wSub)wSub.innerHTML=t('hear_daily');
+    const wBacked=document.getElementById('w-backed');if(wBacked)wBacked.textContent=t('backed_research');
+    const wQuote=document.getElementById('w-quote');if(wQuote)wQuote.textContent=t('research_quote');
+    const wSrc=document.getElementById('w-src');if(wSrc)wSrc.textContent=t('research_src');
+    const wAlready=document.getElementById('w-already');if(wAlready)wAlready.textContent=t('already_account');
+    const wSignin=document.getElementById('w-signin');if(wSignin)wSignin.textContent=t('signin_link');
+  }
+  // Signup
+  const suH=document.getElementById('su-h');if(suH)suH.textContent=t('save_voice');
+  const suSub=document.getElementById('su-sub');if(suSub)suSub.textContent=t('save_voice_sub');
+  const suNameL=document.getElementById('su-name-label');if(suNameL)suNameL.textContent=t('first_name');
+  const suBtn=document.getElementById('su-btn');if(suBtn&&!suBtn.disabled)suBtn.textContent=t('goals_btn');
+  // Signin
+  const siH=document.getElementById('si-h');if(siH)siH.textContent=t('welcome_back');
+  const siSub=document.getElementById('si-sub');if(siSub)siSub.textContent=t('welcome_back_sub');
+  const siEmailL=document.getElementById('si-email-label');if(siEmailL)siEmailL.textContent=t('email_label');
+  const siBtn=document.getElementById('si-btn');if(siBtn&&!siBtn.disabled)siBtn.textContent=t('signin_btn');
+  // Goals setup — translate goal card labels
   document.querySelector('#screen-goals .label').textContent=t('step1');
   document.querySelector('#screen-goals h2').textContent=t('goals_h');
   document.querySelector('#screen-goals .sub').textContent=t('goals_sub');
   document.getElementById('goals-btn').textContent=t('goals_btn');
+  document.querySelectorAll('#screen-goals .goal-card').forEach(c=>{const g=c.dataset.goal;c.querySelector('.gt').textContent=t(goalKeys[g])||g});
   // Voice clone
   document.querySelector('#screen-voice .label').textContent=t('step2');
   document.querySelector('#screen-voice h2').textContent=t('voice_h');
   document.querySelector('#screen-voice .sub').textContent=t('voice_sub');
   document.getElementById('vrt').textContent=t('reading');
   if(!S.isRec&&document.getElementById('vb')&&!document.getElementById('vb').classList.contains('hidden'))document.getElementById('vb').innerHTML=t('voice_rec');
-  // Dashboard - recommended card is dynamic, updated by popRecommended
+  // Dashboard — recommended card
+  const recLabel=document.getElementById('rec-label');if(recLabel)recLabel.textContent=t('rec_for_you');
+  // Dashboard — "All Sessions" label
+  const allSessLabel=document.querySelector('#screen-dashboard .session-grid');
+  if(allSessLabel&&allSessLabel.previousElementSibling)allSessLabel.previousElementSibling.textContent=t('all_sessions');
+  // Dashboard — session cards
   const sg=document.querySelectorAll('.session-grid .sess-card');
   if(sg.length>=5){sg[0].querySelector('.sn').textContent=NAMES('morning');sg[0].querySelector('.sd').textContent=t('morning_desc');sg[1].querySelector('.sn').textContent=NAMES('visualization');sg[1].querySelector('.sd').textContent=t('vis_desc');sg[2].querySelector('.sn').textContent=NAMES('evening');sg[2].querySelector('.sd').textContent=t('eve_desc');sg[3].querySelector('.sn').textContent=NAMES('tough');sg[3].querySelector('.sd').textContent=t('tough_desc');sg[4].querySelector('.sn').textContent=NAMES('free');sg[4].querySelector('.sd').textContent=t('free_desc')}
   // Dashboard cards
@@ -500,13 +574,16 @@ function applyLang(){
   // Settings
   document.querySelector('#screen-settings h2').textContent=t('settings');
   document.getElementById('lang-status-set').textContent=LANGS_DISPLAY[l]||'English';
-  // Edit goals
+  // Edit goals — translate goal card labels
   document.querySelector('#screen-editgoals h2').textContent=t('edit_goals_h');
   document.getElementById('save-goals-btn').textContent=t('save_goals');
+  document.querySelectorAll('#edit-goals-grid .goal-card').forEach(c=>{const g=c.dataset.goal;c.querySelector('.gt').textContent=t(goalKeys[g])||g});
   // Re-record
   document.querySelector('#screen-rerecord h2').textContent=t('rerecord_h');
   document.querySelector('#screen-rerecord .sub').textContent=t('rerecord_sub');
   document.getElementById('rr-text').textContent=t('reading');
+  // Listen mode
+  const ltEnd=document.querySelector('#screen-listen p:last-child');if(ltEnd&&ltEnd.textContent.match(/End|Fin/i))ltEnd.textContent=t('end_session');
   // Call screen
   document.getElementById('th').textContent=t('tap_mic');
 }
@@ -562,18 +639,18 @@ function resetAll(){try{if(!confirm(t('reset_confirm')))return;localStorage.clea
 async function playWelcomeMsg(){
   const sub=document.getElementById('vok-sub');
   const btn=document.getElementById('vok-btn');
-  sub.textContent='Playing your welcome message...';
+  sub.textContent=t('welcome_msg_playing');
   try{
     const msg='Welcome to your Higher Self! I am now ready to coach you. Let us begin this journey together.';
     const res=await fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:msg})});
     if(res.ok){
       const blob=await res.blob();
       const audio=new Audio(URL.createObjectURL(blob));
-      audio.onended=()=>{sub.textContent='Your Higher Self is ready.';btn.classList.remove('hidden')};
-      audio.onerror=()=>{sub.textContent='Your Higher Self is ready.';btn.classList.remove('hidden')};
+      audio.onended=()=>{sub.textContent=t('welcome_msg_ready');btn.classList.remove('hidden')};
+      audio.onerror=()=>{sub.textContent=t('welcome_msg_ready');btn.classList.remove('hidden')};
       audio.play();
-    }else{sub.textContent='Your Higher Self is ready.';btn.classList.remove('hidden')}
-  }catch(e){sub.textContent='Your Higher Self is ready.';btn.classList.remove('hidden')}
+    }else{sub.textContent=t('welcome_msg_ready');btn.classList.remove('hidden')}
+  }catch(e){sub.textContent=t('welcome_msg_ready');btn.classList.remove('hidden')}
 }
 
 // === SIGNUP ===
@@ -582,16 +659,16 @@ async function doSignup(){
   const email=document.getElementById('su-email').value.trim();
   const err=document.getElementById('su-err');
   err.textContent='';
-  if(!name){err.textContent='Please enter your name';return}
-  if(!email||!email.includes('@')){err.textContent='Please enter a valid email';return}
-  document.getElementById('su-btn').textContent='Saving...';document.getElementById('su-btn').disabled=true;
+  if(!name){err.textContent=t('name_required');return}
+  if(!email||!email.includes('@')){err.textContent=t('email_required');return}
+  document.getElementById('su-btn').textContent=t('saving');document.getElementById('su-btn').disabled=true;
   try{
     const res=await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name,voiceId:S.voiceId,goals:S.goals,language:S.lang})});
     const data=await res.json();
     if(data.success){S.name=name;S.email=email;save();goTo('dashboard')}
     else{err.textContent=data.error||'Signup failed'}
   }catch(e){err.textContent='Connection error'}
-  document.getElementById('su-btn').textContent='Continue';document.getElementById('su-btn').disabled=false;
+  document.getElementById('su-btn').textContent=t('goals_btn');document.getElementById('su-btn').disabled=false;
 }
 
 // === SIGNIN ===
@@ -599,8 +676,8 @@ async function doSignin(){
   const email=document.getElementById('si-email').value.trim();
   const err=document.getElementById('si-err');
   err.textContent='';
-  if(!email||!email.includes('@')){err.textContent='Please enter a valid email';return}
-  document.getElementById('si-btn').textContent='Signing in...';document.getElementById('si-btn').disabled=true;
+  if(!email||!email.includes('@')){err.textContent=t('email_required');return}
+  document.getElementById('si-btn').textContent=t('signing_in');document.getElementById('si-btn').disabled=true;
   try{
     const res=await fetch('/api/signin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
     const data=await res.json();
@@ -611,12 +688,12 @@ async function doSignin(){
       applyLang();goTo('dashboard');
     }else{err.textContent=data.error||'Sign in failed'}
   }catch(e){err.textContent='Connection error'}
-  document.getElementById('si-btn').textContent='Sign In';document.getElementById('si-btn').disabled=false;
+  document.getElementById('si-btn').textContent=t('signin_btn');document.getElementById('si-btn').disabled=false;
 }
 
 // === LOGOUT ===
 function doLogout(){
-  if(!confirm('Log out? You can sign back in with your email.'))return;
+  if(!confirm(t('logout_confirm')))return;
   localStorage.clear();S.voiceId=null;S.goals=[];S.lang='en';S.name=null;S.email=null;
   window.location.href=window.location.origin;
 }
