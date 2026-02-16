@@ -281,7 +281,7 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
 <!-- SETTINGS -->
 <div id="screen-settings" class="screen" style="justify-content:flex-start;padding-top:calc(40px + env(safe-area-inset-top,20px))">
   <div style="max-width:420px;width:100%">
-    <button class="back-btn" onclick="goTo('dashboard')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to Dashboard</button>
+    <button class="back-btn" data-dash="1" onclick="goTo('dashboard')"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to Dashboard</button>
     <h2 style="margin-bottom:24px">Settings</h2>
     <div class="card" style="padding:20px">
       <div class="set-row">
@@ -451,7 +451,10 @@ const I18N = {
     intro_evening:'This is a conversation. Your Higher Self will check in, then tap the mic to respond.',
     intro_tough:'This is a conversation. Your Higher Self will challenge you — tap the mic to respond.',
     intro_free:'This is an open conversation. Your Higher Self will speak first, then tap the mic to talk.',
-    im_ready:'I\'m Ready'
+    im_ready:'I\'m Ready',
+    connection_error:'Connection error',could_not_start:'Could not start session',could_not_understand:'Could not understand',
+    hi_name:'Hi, {name}!',
+    you_label:'You'
   },
   fr: {
     names:{free:'Conversation Libre',morning:'Motivation Matinale',visualization:'Visualisation Guidée',evening:'Réflexion du Soir',tough:'Amour Dur'},
@@ -490,7 +493,10 @@ const I18N = {
     intro_evening:'C\'est une conversation. Ton Moi Supérieur va te parler, puis appuie sur le micro pour répondre.',
     intro_tough:'C\'est une conversation. Ton Moi Supérieur va te challenger — appuie sur le micro pour répondre.',
     intro_free:'C\'est une conversation ouverte. Ton Moi Supérieur va parler en premier, puis appuie sur le micro.',
-    im_ready:'Je suis prêt'
+    im_ready:'Je suis prêt',
+    connection_error:'Erreur de connexion',could_not_start:'Impossible de démarrer la séance',could_not_understand:'Impossible de comprendre',
+    hi_name:'Salut, {name}\u00A0!',
+    you_label:'Toi'
   },
   es: {
     names:{free:'Conversación Libre',morning:'Motivación Matutina',visualization:'Visualización Guiada',evening:'Reflexión Nocturna',tough:'Amor Duro'},
@@ -529,7 +535,10 @@ const I18N = {
     intro_evening:'Es una conversación. Tu Yo Superior te hablará, luego toca el micrófono para responder.',
     intro_tough:'Es una conversación. Tu Yo Superior te desafiará — toca el micrófono para responder.',
     intro_free:'Es una conversación abierta. Tu Yo Superior hablará primero, luego toca el micrófono.',
-    im_ready:'Estoy listo'
+    im_ready:'Estoy listo',
+    connection_error:'Error de conexión',could_not_start:'No se pudo iniciar la sesión',could_not_understand:'No se pudo entender',
+    hi_name:'\u00A1Hola, {name}!',
+    you_label:'Tú'
   }
 };
 
@@ -553,10 +562,10 @@ function bumpStreak(){const s=getStreak();const today=new Date().toDateString();
 function goTo(s){document.querySelectorAll('.screen').forEach(e=>e.classList.remove('active'));setTimeout(()=>{document.getElementById('screen-'+s).classList.add('active');if(s==='voice')initV('vv','vrt');if(s==='rerecord')initV('rr-viz','rr-text');if(s==='dashboard')popDash();if(s==='settings')popSettings();if(s==='editgoals')popEditGoals()},50)}
 function showErr(m){const t=document.getElementById('err');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000)}
 function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function timeAgo(ts){const d=Date.now()-ts;if(d<60000)return'Just now';if(d<3600000)return Math.floor(d/60000)+'m ago';if(d<86400000)return Math.floor(d/3600000)+'h ago';return Math.floor(d/86400000)+'d ago'}
+function timeAgo(ts){const d=Date.now()-ts;const ago={en:'ago',fr:'il y a',es:'hace'};const a=ago[S.lang]||'ago';if(d<60000)return S.lang==='fr'?'À l\'instant':S.lang==='es'?'Justo ahora':'Just now';if(d<3600000){const m=Math.floor(d/60000);return S.lang==='fr'?a+' '+m+'m':S.lang==='es'?a+' '+m+'m':m+'m '+a}if(d<86400000){const h=Math.floor(d/3600000);return S.lang==='fr'?a+' '+h+'h':S.lang==='es'?a+' '+h+'h':h+'h '+a}const dd=Math.floor(d/86400000);return S.lang==='fr'?a+' '+dd+'j':S.lang==='es'?a+' '+dd+'d':dd+'d '+a}
 function openLM(){document.getElementById('lm').classList.add('show')}
 function closeLM(){document.getElementById('lm').classList.remove('show')}
-function setLang(l){S.lang=l;document.querySelectorAll('.lo').forEach(o=>o.classList.toggle('on',o.dataset.l===l));closeLM();save();applyLang();fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:l})}).catch(()=>{})}
+function setLang(l){S.lang=l;document.querySelectorAll('.lo').forEach(o=>o.classList.toggle('on',o.dataset.l===l));closeLM();save();applyLang();popDash();popSettings();fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:l})}).catch(()=>{})}
 
 function applyLang(){
   const l=S.lang;
@@ -566,8 +575,7 @@ function applyLang(){
   // ALL back buttons
   document.querySelectorAll('.back-btn').forEach(function(b){
     var svg=b.querySelector('svg');var svgHTML=svg?svg.outerHTML:'\u2190';
-    var txt=b.textContent.trim();
-    if(txt.includes('Dashboard')||txt.includes('Tableau')||txt.includes('Panel'))b.innerHTML=svgHTML+' '+t('back_dash');
+    if(b.dataset.dash)b.innerHTML=svgHTML+' '+t('back_dash');
     else b.innerHTML=svgHTML+' '+t('back');
   });
   // Welcome
@@ -717,20 +725,21 @@ function waitBlob(mr,chunks){return new Promise(r=>{var mime=getRecMime()||'audi
 async function uploadVoice(blob){try{const fd=new FormData();var ext=blob.type.includes('mp4')?'m4a':blob.type.includes('ogg')?'ogg':'webm';fd.append('audio',blob,'voice.'+ext);const res=await fetch('/api/clone-voice',{method:'POST',body:fd});if(!res.ok){let m='Voice cloning failed';try{m=(await res.json()).error||m}catch(e){}showErr(m);return false}
 const data=await res.json();if(data.success&&data.voiceId){S.voiceId=data.voiceId;save();return true}showErr(data.error||'Failed');return false}catch(e){showErr('Could not reach server: '+e.message);return false}}
 
-function resetVoice(btnId,statusId,timerId){const b=document.getElementById(btnId);b.classList.remove('hidden');b.innerHTML='🎙 Try Again';b.style='';document.getElementById(statusId).textContent='';document.getElementById(timerId).textContent=''}
+function resetVoice(btnId,statusId,timerId){const b=document.getElementById(btnId);b.classList.remove('hidden');b.innerHTML=t('voice_retry');b.style='';document.getElementById(statusId).textContent='';document.getElementById(timerId).textContent=''}
 
 function reRecordVoice(){goTo('rerecord')}
 
 // === SETTINGS ===
 function popSettings(){
-  document.getElementById('goals-status-set').textContent=S.goals.join(', ')||t('no_goals');
+  const goalKeys={Fitness:'goal_fitness',Finance:'goal_finance',Relationships:'goal_relationships',Mindset:'goal_mindset',Career:'goal_career',Wellness:'goal_wellness'};
+  document.getElementById('goals-status-set').textContent=S.goals.map(g=>t(goalKeys[g])||g).join(', ')||t('no_goals');
   document.getElementById('lang-status-set').textContent=LANGS_DISPLAY[S.lang]||'English';
   document.getElementById('voice-status-set').textContent=S.voiceId?t('set_voice_sub')+' — '+S.voiceId.slice(0,8)+'...':t('no_goals');
-  document.getElementById('set-name').textContent=S.name||'Account';
-  document.getElementById('set-email').textContent=S.email||'Not signed in';
+  document.getElementById('set-name').textContent=S.name||t('account_label');
+  document.getElementById('set-email').textContent=S.email||t('not_signed_in');
 }
 function editGoals(){goTo('editgoals')}
-function resetAll(){try{if(!confirm(t('reset_confirm')))return;localStorage.clear();S.voiceId=null;S.goals=[];S.lang='en';S.name=null;S.email=null;fetch('/api/reset',{method:'POST'}).catch(()=>{});window.location.href=window.location.origin}catch(e){alert('Reset failed: '+e.message)}}
+function resetAll(){try{if(!confirm(t('reset_confirm')))return;localStorage.clear();S.voiceId=null;S.goals=[];S.lang='en';S.name=null;S.email=null;fetch('/api/reset',{method:'POST'}).catch(()=>{});window.location.href=window.location.origin}catch(e){alert(e.message)}}
 
 // === WELCOME VOICE MESSAGE ===
 async function playWelcomeMsg(){
@@ -738,7 +747,8 @@ async function playWelcomeMsg(){
   const btn=document.getElementById('vok-btn');
   sub.textContent=t('welcome_msg_playing');
   try{
-    const msg='Welcome to your Higher Self! I am now ready to coach you. Let us begin this journey together.';
+    const msgs={en:'Welcome to your Higher Self! I am now ready to coach you. Let us begin this journey together.',fr:'Bienvenue dans ton Moi Supérieur\u00A0! Je suis maintenant prêt à te coacher. Commençons ce voyage ensemble.',es:'\u00A1Bienvenido a tu Yo Superior! Ahora estoy listo para ser tu coach. Comencemos este viaje juntos.'};
+    const msg=msgs[S.lang]||msgs.en;
     const res=await fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:msg})});
     if(res.ok){
       const blob=await res.blob();
@@ -765,7 +775,7 @@ async function doSignup(){
     if(data.success){S.name=name;S.email=email;save();goTo('dashboard')}
     else if(res.status===409){err.innerHTML=data.error+' <a style="color:var(--gold);cursor:pointer;text-decoration:underline" onclick="document.getElementById(\'si-email\').value=document.getElementById(\'su-email\').value;goTo(\'signin\')">Sign in</a>'}
     else{err.textContent=data.error||'Signup failed'}
-  }catch(e){err.textContent='Connection error'}
+  }catch(e){err.textContent=t('connection_error')}
   document.getElementById('su-btn').textContent=t('goals_btn');document.getElementById('su-btn').disabled=false;
 }
 
@@ -785,7 +795,7 @@ async function doSignin(){
       if(S.lang){document.querySelectorAll('.lo').forEach(o=>o.classList.toggle('on',o.dataset.l===S.lang))}
       applyLang();goTo('dashboard');
     }else{err.textContent=data.error||'Sign in failed'}
-  }catch(e){err.textContent='Connection error'}
+  }catch(e){err.textContent=t('connection_error')}
   document.getElementById('si-btn').textContent=t('signin_btn');document.getElementById('si-btn').disabled=false;
 }
 
@@ -801,10 +811,11 @@ function popDash(){
   popRecommended();
   // Greeting
   const logo=document.querySelector('.dash-logo');
-  if(S.name&&logo)logo.innerHTML='<img src="/img/logo-96.png" alt=""> Hi, '+S.name+'!';
+  if(S.name&&logo)logo.innerHTML='<img src="/img/logo-96.png" alt=""> '+t('hi_name').replace('{name}',S.name);
   else if(logo)logo.innerHTML='<img src="/img/logo-96.png" alt=""> HigherSelf';
-  // Goals
-  document.getElementById('dg').innerHTML=S.goals.map(g=>'<div class="goal-row"><span>'+GI[g]+'</span> '+g+'</div>').join('')||'<p style="font-size:13px;color:var(--w3)">'+t('no_goals')+'</p>';
+  // Goals — translate goal names
+  const goalKeys={Fitness:'goal_fitness',Finance:'goal_finance',Relationships:'goal_relationships',Mindset:'goal_mindset',Career:'goal_career',Wellness:'goal_wellness'};
+  document.getElementById('dg').innerHTML=S.goals.map(g=>'<div class="goal-row"><span>'+GI[g]+'</span> '+t(goalKeys[g]||g)+'</div>').join('')||'<p style="font-size:14px;color:var(--w6)">'+t('no_goals')+'</p>';
   // Stats
   const h=getHist(),sk=getStreak();
   const total=h.length,totalMin=Math.round(h.reduce((a,s)=>a+s.dur,0)/60);
@@ -812,10 +823,10 @@ function popDash(){
     '<div class="stat-box"><div class="stat-num">'+(sk.count||0)+'</div><div class="stat-lbl">'+t('streak_day')+'</div></div>'+
     '<div class="stat-box"><div class="stat-num">'+total+'</div><div class="stat-lbl">'+t('stat_sess')+'</div></div>'+
     '<div class="stat-box"><div class="stat-num">'+totalMin+'</div><div class="stat-lbl">'+t('stat_min')+'</div></div>';
-  document.getElementById('streak-badge').textContent=sk.count?'🔥 '+sk.count+' day'+(sk.count>1?'s':''):'';
+  document.getElementById('streak-badge').textContent=sk.count?'🔥 '+sk.count:'';
   // History
   const hEl=document.getElementById('hist');
-  if(!h.length){hEl.innerHTML='<p style="font-size:13px;color:var(--w3)">'+t('no_sessions')+'</p>';return}
+  if(!h.length){hEl.innerHTML='<p style="font-size:14px;color:var(--w6)">'+t('no_sessions')+'</p>';return}
   hEl.innerHTML=h.slice(0,5).map(s=>'<div class="hist-row"><div class="hist-icon">'+(ICONS[s.type]||'💬')+'</div><div class="hist-info"><div class="hist-name">'+NAMES(s.type)+'</div><div class="hist-time">'+timeAgo(s.ts)+'</div></div><div class="hist-dur">'+fmt(s.dur)+'</div></div>').join('')}
 
 // === LISTEN MODE (Morning / Visualization) ===
@@ -975,13 +986,13 @@ function startSession(type){
     // Talk mode
     S.sType=type;goTo('call');S.cs=0;S.callOn=false;S.trVis=false;
 document.getElementById('ctr').innerHTML='';document.getElementById('ctr').classList.add('hidden');
-document.getElementById('trt').textContent='Show Transcript';
+document.getElementById('trt').textContent=t('show_tr');
 document.getElementById('st').innerHTML=ICONS[type]+' '+NAMES(type);
 document.getElementById('oi').textContent=ICONS[type];
 const cv=document.getElementById('cv');cv.innerHTML='';for(let i=0;i<36;i++){const b=document.createElement('div');b.className='audio-bar';cv.appendChild(b)}
 setTimeout(async()=>{S.callOn=true;document.getElementById('cs').textContent=t('higher_self');document.getElementById('csub').textContent=t('starting');document.getElementById('co').classList.add('on');document.getElementById('pr').style.display='flex';
 S.ct=setInterval(()=>{S.cs++;document.getElementById('ctm').textContent=fmt(S.cs)},1000);
-try{const res=await fetch('/api/coach/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang,sessionType:type})});const data=await res.json();if(data.success){addMsg(data.reply,'Higher Self');speakText(data.reply)}else showErr(data.error||'Could not start session')}catch(e){showErr('Connection error')}},1000)
+try{const res=await fetch('/api/coach/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang,sessionType:type})});const data=await res.json();if(data.success){addMsg(data.reply,'Higher Self');speakText(data.reply)}else showErr(data.error||t('could_not_start'))}catch(e){showErr(t('connection_error'))}},1000)
   })}
 
 function endCall(){const dur=S.cs;S.callOn=false;if(S.ct)clearInterval(S.ct);if(S.audio){S.audio.pause();S.audio=null}document.getElementById('pr').style.display='none';document.getElementById('co').classList.remove('on');
@@ -1001,11 +1012,11 @@ function animC(){if(!S.talking||!S.an)return;const bars=document.querySelectorAl
 function fakeViz(){if(!S.processing&&!(S.audio&&!S.audio.paused))return;document.querySelectorAll('#cv .audio-bar').forEach(b=>{b.style.height=4+Math.random()*28+'px';b.classList.add('on')});setTimeout(fakeViz,120)}
 function resetCB(){document.querySelectorAll('#cv .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')})}
 
-async function processS(blob){S.processing=true;fakeViz();try{const fd=new FormData();var ext=blob.type.includes('mp4')?'m4a':blob.type.includes('ogg')?'ogg':'webm';fd.append('audio',blob,'speech.'+ext);const res=await fetch('/api/transcribe',{method:'POST',body:fd});const data=await res.json();if(!data.success||!data.text){showErr(data.error||'Could not understand');S.processing=false;resetCB();ready();return}addMsg(data.text,'You',true);await getReply(data.text)}catch(e){showErr('Connection error');S.processing=false;resetCB();ready()}}
-async function getReply(msg){document.getElementById('csub').textContent=t('thinking');try{const res=await fetch('/api/coach/respond',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userMessage:msg,goals:S.goals,language:S.lang,sessionType:S.sType})});const data=await res.json();if(data.success){addMsg(data.reply,'Higher Self');speakText(data.reply)}else showErr(data.error||'Error')}catch(e){showErr('Connection error')}S.processing=false;if(!S.audio){resetCB();ready()}}
+async function processS(blob){S.processing=true;fakeViz();try{const fd=new FormData();var ext=blob.type.includes('mp4')?'m4a':blob.type.includes('ogg')?'ogg':'webm';fd.append('audio',blob,'speech.'+ext);const res=await fetch('/api/transcribe',{method:'POST',body:fd});const data=await res.json();if(!data.success||!data.text){showErr(data.error||t('could_not_understand'));S.processing=false;resetCB();ready();return}addMsg(data.text,'You',true);await getReply(data.text)}catch(e){showErr(t('connection_error'));S.processing=false;resetCB();ready()}}
+async function getReply(msg){document.getElementById('csub').textContent=t('thinking');try{const res=await fetch('/api/coach/respond',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userMessage:msg,goals:S.goals,language:S.lang,sessionType:S.sType})});const data=await res.json();if(data.success){addMsg(data.reply,'Higher Self');speakText(data.reply)}else showErr(data.error||'Error')}catch(e){showErr(t('connection_error'))}S.processing=false;if(!S.audio){resetCB();ready()}}
 async function speakText(text){document.getElementById('csub').textContent=t('speaking');fakeViz();try{const res=await fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});if(res.ok){const blob=await res.blob();S.audio=new Audio(URL.createObjectURL(blob));S.audio.muted=S.muted;S.audio.onended=()=>{S.audio=null;resetCB();ready()};S.audio.play()}else{resetCB();ready()}}catch(e){resetCB();ready()}}
 function ready(){document.getElementById('csub').textContent=t('speaking_ready');document.getElementById('th').textContent=t('tap_mic')}
-function addMsg(text,sender,isUser){const el=document.getElementById('ctr'),m=document.createElement('div');m.className='tmsg'+(isUser?' u':'');m.innerHTML='<p class="ts">'+(isUser?sender:t('higher_self'))+'</p><p class="tt">'+text+'</p>';el.appendChild(m);el.scrollTop=el.scrollHeight}
+function addMsg(text,sender,isUser){const el=document.getElementById('ctr'),m=document.createElement('div');m.className='tmsg'+(isUser?' u':'');m.innerHTML='<p class="ts">'+(isUser?t('you_label'):t('higher_self'))+'</p><p class="tt">'+text+'</p>';el.appendChild(m);el.scrollTop=el.scrollHeight}
 
 // === BOOT ===
 !function(){const saved=load();if(saved&&saved.voiceId&&saved.goals&&saved.goals.length){
