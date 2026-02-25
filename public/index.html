@@ -22,7 +22,7 @@ html,body{height:100%;width:100%;background:linear-gradient(160deg,var(--bg) 0%,
 h1{font-size:38px;font-weight:900;letter-spacing:-.02em;line-height:1.05}
 h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
 .sub{font-size:15px;color:var(--w6);line-height:1.6;margin-top:8px}
-.btn{width:100%;padding:18px 28px;border-radius:14px;border:none;font-size:17px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .25s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn{width:100%;padding:18px 28px;border-radius:14px;border:none;font-size:17px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .25s;display:flex;align-items:center;justify-content:center;gap:10px;touch-action:manipulation}
 .btn:active{transform:scale(.97)}
 .btn-gold{background:linear-gradient(135deg,var(--gold),#D4A03A);color:#1a1000;box-shadow:0 4px 28px var(--gold-g)}
 .btn-sec{background:var(--w0);color:var(--w6);border:1px solid var(--w1)}
@@ -32,7 +32,7 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
 .back-btn:hover{color:var(--w9)}
 .back-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none}
 .goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}
-.goal-card{background:var(--w0);border:1.5px solid var(--w1);border-radius:var(--r);padding:20px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .3s;user-select:none}
+.goal-card{background:var(--w0);border:1.5px solid var(--w1);border-radius:var(--r);padding:20px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .3s;user-select:none;touch-action:manipulation}
 .goal-card.sel{background:linear-gradient(135deg,rgba(232,184,75,.12),rgba(59,123,247,.08));border-color:var(--gold-d)}
 .goal-card .gi{font-size:28px;flex-shrink:0}
 .goal-card .gt{font-size:15px;font-weight:700;color:var(--w6)}.goal-card.sel .gt{color:var(--w9)}
@@ -658,7 +658,7 @@ function applyLang(){
 }
 
 // === GOALS (setup) ===
-function tg(el){el.classList.toggle('sel');const g=el.dataset.goal;if(S.goals.includes(g))S.goals=S.goals.filter(x=>x!==g);else S.goals.push(g);document.getElementById('goals-btn').disabled=!S.goals.length}
+function tg(el){el.classList.toggle('sel');S.goals=Array.from(document.querySelectorAll('#screen-goals .goal-card.sel')).map(c=>c.dataset.goal);document.getElementById('goals-btn').disabled=!S.goals.length}
 async function submitGoals(){save();fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goals:S.goals,language:S.lang})}).catch(()=>{});goTo('voice')}
 
 // === GOALS (edit) ===
