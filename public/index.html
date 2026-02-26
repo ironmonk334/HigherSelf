@@ -676,8 +676,9 @@ function initV(vizId,txtId){const v=document.getElementById(vizId);if(!v.childre
   }
 }
 function showReadingChunk(){
-  const chunks=t('reading');if(!Array.isArray(chunks))return;
-  document.getElementById('vrt').textContent=chunks[S.rChunk];
+  const chunks=t('reading');if(!Array.isArray(chunks)||!chunks.length)return;
+  var txt=chunks[S.rChunk]||chunks[0]||'';
+  document.getElementById('vrt').textContent=txt;
   document.querySelectorAll('.vr-dot').forEach((d,i)=>{
     d.className='vr-dot'+(i===S.rChunk?' on':(i<S.rChunk?' done':''));
   });
@@ -707,9 +708,9 @@ document.getElementById('vs').textContent='';document.getElementById('vt').textC
 
 function animViz(vizId){if(!S.isRec&&!S.rrRec)return;if(!S.an)return;const bars=document.querySelectorAll('#'+vizId+' .audio-bar'),d=new Uint8Array(S.an.frequencyBinCount);S.an.getByteFrequencyData(d);bars.forEach((b,i)=>{b.style.height=4+(d[i%d.length]||0)/255*36+'px';b.classList.add('on')});requestAnimationFrame(()=>animViz(vizId))}
 
-async function stopR(){S.isRec=false;if(S.ac){S.ac.close();S.ac=null;S.an=null}document.querySelectorAll('#vv .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')});document.getElementById('vb').classList.add('hidden');document.getElementById('vt').textContent='';document.getElementById('vs').textContent='Uploading and cloning your voice...';
+async function stopR(){S.isRec=false;if(S.ac){S.ac.close();S.ac=null;S.an=null}document.querySelectorAll('#vv .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')});document.getElementById('vb').classList.add('hidden');document.getElementById('vt').textContent='';document.getElementById('vs').textContent=t('voice_uploading');
 const blob=await waitBlob(S.mr,S.chunks);if(!blob||blob.size<1000){showErr('Recording too short');resetVoice('vb','vs','vt');return}
-const result=await uploadVoice(blob);if(result){document.getElementById('vs').textContent='';document.getElementById('vr').classList.add('hidden');document.getElementById('vok').classList.remove('hidden');playWelcomeMsg()}else{resetVoice('vb','vs','vt')}}
+const result=await uploadVoice(blob);if(result){document.getElementById('vs').textContent='';document.getElementById('vr').classList.add('hidden');document.getElementById('vr-dots').style.display='none';document.getElementById('vr-next').classList.add('hidden');document.getElementById('vv').style.display='none';document.getElementById('vok').classList.remove('hidden');playWelcomeMsg()}else{resetVoice('vb','vs','vt')}}
 
 // === RE-RECORD VOICE ===
 async function toggleReRec(){if(S.rrRec){stopReRec();return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});var mime=getRecMime();var opts=mime?{mimeType:mime}:{};S.rrMr=new MediaRecorder(stream,opts);S.rrChunks=[];S.rrMr.ondataavailable=e=>S.rrChunks.push(e.data);S.rrMr.stream=stream;S.rrMr.start();S.rrRec=true;S.ac=new(AudioContext||webkitAudioContext)();const src=S.ac.createMediaStreamSource(stream);S.an=S.ac.createAnalyser();S.an.fftSize=64;src.connect(S.an);animViz('rr-viz');const b=document.getElementById('rr-btn');b.innerHTML='⏹ Tap When Done';b.style.cssText='background:rgba(255,80,80,.3);border:1px solid rgba(255,80,80,.4)';document.getElementById('rr-status').textContent='';document.getElementById('rr-timer').textContent='🔴 Recording — read at your own pace'}catch(e){alert('Please allow microphone access.')}}
@@ -746,6 +747,9 @@ async function playWelcomeMsg(){
   const sub=document.getElementById('vok-sub');
   const btn=document.getElementById('vok-btn');
   sub.textContent=t('welcome_msg_playing');
+  function showBtn(){sub.textContent=t('welcome_msg_ready');btn.classList.remove('hidden')}
+  // Fallback: always show button after 8 seconds no matter what
+  var fallback=setTimeout(showBtn,8000);
   try{
     const msgs={en:'Welcome to your Higher Self! I am now ready to coach you. Let us begin this journey together.',fr:'Bienvenue dans ton Moi Supérieur\u00A0! Je suis maintenant prêt à te coacher. Commençons ce voyage ensemble.',es:'\u00A1Bienvenido a tu Yo Superior! Ahora estoy listo para ser tu coach. Comencemos este viaje juntos.'};
     const msg=msgs[S.lang]||msgs.en;
@@ -753,11 +757,11 @@ async function playWelcomeMsg(){
     if(res.ok){
       const blob=await res.blob();
       const audio=new Audio(URL.createObjectURL(blob));
-      audio.onended=()=>{sub.textContent=t('welcome_msg_ready');btn.classList.remove('hidden')};
-      audio.onerror=()=>{sub.textContent=t('welcome_msg_ready');btn.classList.remove('hidden')};
-      audio.play();
-    }else{sub.textContent=t('welcome_msg_ready');btn.classList.remove('hidden')}
-  }catch(e){sub.textContent=t('welcome_msg_ready');btn.classList.remove('hidden')}
+      audio.onended=()=>{clearTimeout(fallback);showBtn()};
+      audio.onerror=()=>{clearTimeout(fallback);showBtn()};
+      try{await audio.play()}catch(e){clearTimeout(fallback);showBtn()}
+    }else{clearTimeout(fallback);showBtn()}
+  }catch(e){clearTimeout(fallback);showBtn()}
 }
 
 // === SIGNUP ===
