@@ -149,26 +149,32 @@ app.post('/api/restore', (req, res) => {
 });
 
 // VOICE CLONING
-app.post('/api/clone-voice', upload.single('audio'), async (req, res) => {
+app.post('/api/clone-voice', upload.array('audio', 5), async (req, res) => {
   try {
     console.log('🎙 Cloning voice...');
     if (!process.env.ELEVENLABS_API_KEY) return res.status(500).json({ error: 'ElevenLabs API key not configured. Check your .env file.' });
-    if (!req.file) return res.status(400).json({ error: 'No audio file received' });
-    const audioPath = req.file.path;
-    console.log('  Audio file size:', req.file.size, 'bytes');
-    if (req.file.size < 1000) { try { fs.unlinkSync(audioPath); } catch(e) {} return res.status(400).json({ error: 'Recording too short.' }); }
+    if (!req.files || req.files.length === 0) return res.status(400).json({ error: 'No audio files received' });
+    const totalSize = req.files.reduce((sum, f) => sum + f.size, 0);
+    console.log(`  ${req.files.length} audio file(s), total size: ${totalSize} bytes`);
+    if (totalSize < 1000) { req.files.forEach(f => { try { fs.unlinkSync(f.path); } catch(e) {} }); return res.status(400).json({ error: 'Recording too short.' }); }
     const formData = new FormData();
     formData.append('name', 'HigherSelf_' + Date.now());
     formData.append('description', 'HigherSelf voice clone');
-    formData.append('files', fs.createReadStream(audioPath), { filename: 'voice.' + (req.file.originalname.split('.').pop() || 'webm'), contentType: req.file.mimetype || 'audio/webm' });
+    req.files.forEach((f, i) => {
+      const ext = f.originalname.split('.').pop() || 'webm';
+      formData.append('files', fs.createReadStream(f.path), { filename: `voice_${i}.${ext}`, contentType: f.mimetype || 'audio/webm' });
+    });
+    formData.append('remove_background_noise', 'true');
+    const lang = req.body.language || sessions.language || 'en';
+    formData.append('labels', JSON.stringify({ language: lang, use_case: 'self-coaching' }));
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 60000);
+    const timeout = setTimeout(() => controller.abort(), 90000);
     const response = await fetch('https://api.elevenlabs.io/v1/voices/add', {
       method: 'POST', headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY }, body: formData, signal: controller.signal
     });
     clearTimeout(timeout);
     const data = await response.json();
-    try { fs.unlinkSync(audioPath); } catch(e) {}
+    req.files.forEach(f => { try { fs.unlinkSync(f.path); } catch(e) {} });
     if (!response.ok) {
       console.error('❌ ElevenLabs error:', JSON.stringify(data));
       return res.status(response.status).json({ error: 'ElevenLabs: ' + (data.detail?.message || data.detail || JSON.stringify(data)) });
@@ -178,6 +184,7 @@ app.post('/api/clone-voice', upload.single('audio'), async (req, res) => {
     res.json({ success: true, voiceId: data.voice_id });
   } catch (err) {
     console.error('❌ Voice clone error:', err.name, err.message);
+    if (req.files) req.files.forEach(f => { try { fs.unlinkSync(f.path); } catch(e) {} });
     if (err.name === 'AbortError') return res.status(504).json({ error: 'Upload timed out. Try again.' });
     res.status(500).json({ error: 'Server error: ' + err.message });
   }

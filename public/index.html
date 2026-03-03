@@ -177,7 +177,8 @@ h2{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
     <p class="label">Step 2 of 2</p>
     <h2>Clone Your Voice</h2>
     <p class="sub">Tap record, then read each passage at your own pace.</p>
-    <div style="height:14px"></div>
+    <p id="voice-tips" class="sub" style="font-size:12px;color:var(--w3);margin-top:8px;line-height:1.6"></p>
+    <div style="height:10px"></div>
     <div id="vr" class="readout">
       <p style="font-size:15px;color:var(--w6);line-height:1.75;font-style:italic" id="vrt"></p>
     </div>
@@ -420,7 +421,7 @@ const I18N = {
     welcome_tag:'HigherSelf',welcome_h1:'Coach yourself.<br>Literally.',welcome_sub:'Your voice. Your goals.<br>One conversation with the future you.',welcome_btn:'Get Started',
     feat1:'Clones your<br>voice',feat2:'5 healing<br>session types',feat3:'AI coaching<br>in your voice',
     step1:'Step 1 of 2',step2:'Step 2 of 2',goals_h:'What do you want to transform?',goals_sub:'Select all that apply.',goals_btn:'Continue',
-    voice_h:'Clone Your Voice',voice_sub:'Tap record, then read each passage at your own pace.',voice_rec:'🎙 Start Recording',voice_done:'⏹ Tap When Done',voice_recording:'🔴 Recording — read at your own pace',voice_uploading:'Uploading and cloning your voice...',voice_success:'Voice Cloned Successfully',voice_success_sub:'Your Higher Self now speaks in your voice',voice_start:'Start Coaching',voice_retry:'🎙 Try Again',voice_next:'Next →',
+    voice_h:'Clone Your Voice',voice_sub:'Tap record, then read each passage at your own pace.',voice_tips:'Quiet room \u00B7 Hold phone close to mouth \u00B7 Speak naturally',voice_rec:'🎙 Start Recording',voice_done:'⏹ Tap When Done',voice_recording:'🔴 Recording — read at your own pace',voice_uploading:'Uploading and cloning your voice...',voice_success:'Voice Cloned Successfully',voice_success_sub:'Your Higher Self now speaks in your voice',voice_start:'Start Coaching',voice_retry:'🎙 Try Again',voice_next:'Next →',
     free_desc:'Open coaching with your Higher Self',morning_desc:'Affirmations & energy',vis_desc:'Guided meditation',eve_desc:'Reflect & set intentions',tough_desc:'Accountability push',
     goals_title:'🎯 Active Goals',recent_title:'📋 Recent Sessions',no_goals:'No goals set',no_sessions:'No sessions yet — start one above!',
     streak_day:'Day Streak',stat_sess:'Sessions',stat_min:'Minutes',
@@ -462,7 +463,7 @@ const I18N = {
     welcome_tag:'HigherSelf',welcome_h1:'Coache-toi.<br>Littéralement.',welcome_sub:'Ta voix. Tes objectifs.<br>Une conversation avec le futur toi.',welcome_btn:'Commencer',
     feat1:'Clone ta<br>voix',feat2:'5 types de<br>séances',feat3:'Coaching IA<br>avec ta voix',
     step1:'Étape 1 sur 2',step2:'Étape 2 sur 2',goals_h:'Que veux-tu transformer ?',goals_sub:'Sélectionne tout ce qui s\'applique.',goals_btn:'Continuer',
-    voice_h:'Clone Ta Voix',voice_sub:'Appuie sur enregistrer, puis lis chaque passage à ton rythme.',voice_rec:'🎙 Commencer l\'enregistrement',voice_done:'⏹ Appuie quand c\'est fini',voice_recording:'🔴 Enregistrement — lis à ton rythme',voice_uploading:'Téléchargement et clonage de ta voix...',voice_success:'Voix Clonée avec Succès',voice_success_sub:'Ton Moi Supérieur parle maintenant avec ta voix',voice_start:'Commencer le Coaching',voice_retry:'🎙 Réessayer',voice_next:'Suivant →',
+    voice_h:'Clone Ta Voix',voice_sub:'Appuie sur enregistrer, puis lis chaque passage à ton rythme.',voice_tips:'Endroit calme \u00B7 Tiens le téléphone près de ta bouche \u00B7 Parle naturellement',voice_rec:'🎙 Commencer l\'enregistrement',voice_done:'⏹ Appuie quand c\'est fini',voice_recording:'🔴 Enregistrement — lis à ton rythme',voice_uploading:'Téléchargement et clonage de ta voix...',voice_success:'Voix Clonée avec Succès',voice_success_sub:'Ton Moi Supérieur parle maintenant avec ta voix',voice_start:'Commencer le Coaching',voice_retry:'🎙 Réessayer',voice_next:'Suivant →',
     free_desc:'Coaching ouvert avec ton Moi Supérieur',morning_desc:'Affirmations & énergie',vis_desc:'Méditation guidée',eve_desc:'Réfléchir & fixer des intentions',tough_desc:'Poussée de responsabilité',
     goals_title:'🎯 Objectifs Actifs',recent_title:'📋 Séances Récentes',no_goals:'Aucun objectif défini',no_sessions:'Pas encore de séances — commence ci-dessus !',
     streak_day:'Jours Consécutifs',stat_sess:'Séances',stat_min:'Minutes',
@@ -504,7 +505,7 @@ const I18N = {
     welcome_tag:'HigherSelf',welcome_h1:'Entrénate.<br>Literalmente.',welcome_sub:'Tu voz. Tus metas.<br>Una conversación con el futuro tú.',welcome_btn:'Comenzar',
     feat1:'Clona tu<br>voz',feat2:'5 tipos de<br>sesiones',feat3:'Coaching IA<br>con tu voz',
     step1:'Paso 1 de 2',step2:'Paso 2 de 2',goals_h:'¿Qué quieres transformar?',goals_sub:'Selecciona todo lo que aplique.',goals_btn:'Continuar',
-    voice_h:'Clona Tu Voz',voice_sub:'Toca grabar, luego lee cada pasaje a tu ritmo.',voice_rec:'🎙 Comenzar a Grabar',voice_done:'⏹ Toca Cuando Termines',voice_recording:'🔴 Grabando — lee a tu ritmo',voice_uploading:'Subiendo y clonando tu voz...',voice_success:'Voz Clonada Exitosamente',voice_success_sub:'Tu Yo Superior ahora habla con tu voz',voice_start:'Comenzar Coaching',voice_retry:'🎙 Intentar de Nuevo',voice_next:'Siguiente →',
+    voice_h:'Clona Tu Voz',voice_sub:'Toca grabar, luego lee cada pasaje a tu ritmo.',voice_tips:'Lugar tranquilo \u00B7 Acerca el teléfono a tu boca \u00B7 Habla con naturalidad',voice_rec:'🎙 Comenzar a Grabar',voice_done:'⏹ Toca Cuando Termines',voice_recording:'🔴 Grabando — lee a tu ritmo',voice_uploading:'Subiendo y clonando tu voz...',voice_success:'Voz Clonada Exitosamente',voice_success_sub:'Tu Yo Superior ahora habla con tu voz',voice_start:'Comenzar Coaching',voice_retry:'🎙 Intentar de Nuevo',voice_next:'Siguiente →',
     free_desc:'Coaching abierto con tu Yo Superior',morning_desc:'Afirmaciones y energía',vis_desc:'Meditación guiada',eve_desc:'Reflexionar y establecer intenciones',tough_desc:'Impulso de responsabilidad',
     goals_title:'🎯 Metas Activas',recent_title:'📋 Sesiones Recientes',no_goals:'Sin metas definidas',no_sessions:'Aún no hay sesiones — ¡comienza arriba!',
     streak_day:'Días Seguidos',stat_sess:'Sesiones',stat_min:'Minutos',
@@ -545,7 +546,7 @@ const I18N = {
 function t(key){return (I18N[S.lang]||I18N.en)[key]||(I18N.en)[key]||key}
 function NAMES(type){return (I18N[S.lang]||I18N.en).names[type]||type}
 
-const S={lang:'en',goals:[],isRec:false,mr:null,chunks:[],ac:null,an:null,callOn:false,ct:null,cs:0,muted:false,trVis:false,talking:false,processing:false,audio:null,tr:null,tc:[],sType:'free',voiceId:null,rrRec:false,rrMr:null,rrChunks:[],name:null,email:null,rChunk:0};
+const S={lang:'en',goals:[],isRec:false,mr:null,chunks:[],ac:null,an:null,callOn:false,ct:null,cs:0,muted:false,trVis:false,talking:false,processing:false,audio:null,tr:null,tc:[],sType:'free',voiceId:null,rrRec:false,rrMr:null,rrChunks:[],name:null,email:null,rChunk:0,recBlobs:[],recStream:null};
 
 // === PERSISTENCE ===
 function save(){try{localStorage.setItem('hs',JSON.stringify({voiceId:S.voiceId,goals:S.goals,lang:S.lang,name:S.name,email:S.email,history:getHist(),streak:getStreak()}))}catch(e){}}
@@ -610,6 +611,7 @@ function applyLang(){
   document.querySelector('#screen-voice .label').textContent=t('step2');
   document.querySelector('#screen-voice h2').textContent=t('voice_h');
   document.querySelector('#screen-voice .sub').textContent=t('voice_sub');
+  var vt=document.getElementById('voice-tips');if(vt)vt.textContent=t('voice_tips')||'';
   var rd=t('reading');
   if(Array.isArray(rd)){showReadingChunk()}else{document.getElementById('vrt').textContent=rd}
   var vrNext=document.getElementById('vr-next');if(vrNext)vrNext.textContent=t('voice_next');
@@ -689,8 +691,14 @@ function showReadingChunk(){
 function nextReadingChunk(){
   const chunks=t('reading');if(!Array.isArray(chunks))return;
   if(S.rChunk<chunks.length-1){
+    // Save current passage as a separate blob, then start new recorder for next passage
+    if(S.isRec&&S.mr&&S.mr.state==='recording'){
+      var mime=getRecMime()||'audio/webm';
+      var curChunks=S.chunks;
+      S.mr.onstop=()=>{S.recBlobs.push(new Blob(curChunks,{type:mime}));startNewRecorder()};
+      S.mr.stop();
+    }
     S.rChunk++;showReadingChunk();
-    // On last chunk, show the stop/done button instead of Next
     if(S.rChunk>=chunks.length-1&&S.isRec){
       document.getElementById('vr-next').classList.add('hidden');
       const b=document.getElementById('vb');
@@ -699,8 +707,13 @@ function nextReadingChunk(){
     }
   }
 }
+function startNewRecorder(){
+  if(!S.recStream)return;
+  var mime=getRecMime();var opts=mime?{mimeType:mime,audioBitsPerSecond:192000}:{audioBitsPerSecond:192000};
+  S.mr=new MediaRecorder(S.recStream,opts);S.chunks=[];S.mr.ondataavailable=e=>S.chunks.push(e.data);S.mr.start();
+}
 
-async function toggleRec(){if(S.isRec){stopR();return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:{sampleRate:44100,channelCount:1,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});var mime=getRecMime();var opts=mime?{mimeType:mime,audioBitsPerSecond:192000}:{audioBitsPerSecond:192000};S.mr=new MediaRecorder(stream,opts);S.chunks=[];S.mr.ondataavailable=e=>S.chunks.push(e.data);S.mr.stream=stream;S.mr.start();S.isRec=true;S.ac=new(AudioContext||webkitAudioContext)();const src=S.ac.createMediaStreamSource(stream);S.an=S.ac.createAnalyser();S.an.fftSize=64;src.connect(S.an);animViz('vv');const chunks=t('reading');const isMulti=Array.isArray(chunks)&&chunks.length>1;
+async function toggleRec(){if(S.isRec){stopR();return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:{sampleRate:44100,channelCount:1,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});S.recStream=stream;S.recBlobs=[];var mime=getRecMime();var opts=mime?{mimeType:mime,audioBitsPerSecond:192000}:{audioBitsPerSecond:192000};S.mr=new MediaRecorder(stream,opts);S.chunks=[];S.mr.ondataavailable=e=>S.chunks.push(e.data);S.mr.start();S.isRec=true;S.ac=new(AudioContext||webkitAudioContext)();const src=S.ac.createMediaStreamSource(stream);S.an=S.ac.createAnalyser();S.an.fftSize=64;src.connect(S.an);animViz('vv');const chunks=t('reading');const isMulti=Array.isArray(chunks)&&chunks.length>1;
 const b=document.getElementById('vb');
 if(isMulti&&S.rChunk<chunks.length-1){b.classList.add('hidden');document.getElementById('vr-next').classList.remove('hidden')}
 else{b.innerHTML=t('voice_done');b.style.cssText='background:rgba(255,80,80,.3);border:1px solid rgba(255,80,80,.4)'}
@@ -709,8 +722,11 @@ document.getElementById('vs').textContent='';document.getElementById('vt').textC
 function animViz(vizId){if(!S.isRec&&!S.rrRec)return;if(!S.an)return;const bars=document.querySelectorAll('#'+vizId+' .audio-bar'),d=new Uint8Array(S.an.frequencyBinCount);S.an.getByteFrequencyData(d);bars.forEach((b,i)=>{b.style.height=4+(d[i%d.length]||0)/255*36+'px';b.classList.add('on')});requestAnimationFrame(()=>animViz(vizId))}
 
 async function stopR(){S.isRec=false;if(S.ac){S.ac.close();S.ac=null;S.an=null}document.querySelectorAll('#vv .audio-bar').forEach(b=>{b.style.height='4px';b.classList.remove('on')});document.getElementById('vb').classList.add('hidden');document.getElementById('vt').textContent='';document.getElementById('vs').textContent=t('voice_uploading');
-const blob=await waitBlob(S.mr,S.chunks);if(!blob||blob.size<1000){showErr('Recording too short');resetVoice('vb','vs','vt');return}
-const result=await uploadVoice(blob);if(result){document.getElementById('vs').textContent='';document.getElementById('vr').classList.add('hidden');document.getElementById('vr-dots').style.display='none';document.getElementById('vr-next').classList.add('hidden');document.getElementById('vv').style.display='none';document.getElementById('vok').classList.remove('hidden');playWelcomeMsg()}else{resetVoice('vb','vs','vt')}}
+var mime=getRecMime()||'audio/webm';var lastBlob=await new Promise(r=>{if(!S.mr||S.mr.state==='inactive'){r(new Blob(S.chunks,{type:mime}));return}S.mr.onstop=()=>r(new Blob(S.chunks,{type:mime}));S.mr.stop()});
+if(S.recStream){S.recStream.getTracks().forEach(t=>t.stop());S.recStream=null}
+var allBlobs=S.recBlobs.concat(lastBlob).filter(b=>b&&b.size>500);
+if(!allBlobs.length){showErr('Recording too short');resetVoice('vb','vs','vt');return}
+const result=await uploadVoice(allBlobs);if(result){document.getElementById('vs').textContent='';document.getElementById('vr').classList.add('hidden');document.getElementById('vr-dots').style.display='none';document.getElementById('vr-next').classList.add('hidden');document.getElementById('vv').style.display='none';document.getElementById('vok').classList.remove('hidden');playWelcomeMsg()}else{resetVoice('vb','vs','vt')}}
 
 // === RE-RECORD VOICE ===
 async function toggleReRec(){if(S.rrRec){stopReRec();return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:{sampleRate:44100,channelCount:1,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});var mime=getRecMime();var opts=mime?{mimeType:mime,audioBitsPerSecond:192000}:{audioBitsPerSecond:192000};S.rrMr=new MediaRecorder(stream,opts);S.rrChunks=[];S.rrMr.ondataavailable=e=>S.rrChunks.push(e.data);S.rrMr.stream=stream;S.rrMr.start();S.rrRec=true;S.ac=new(AudioContext||webkitAudioContext)();const src=S.ac.createMediaStreamSource(stream);S.an=S.ac.createAnalyser();S.an.fftSize=64;src.connect(S.an);animViz('rr-viz');const b=document.getElementById('rr-btn');b.innerHTML='⏹ Tap When Done';b.style.cssText='background:rgba(255,80,80,.3);border:1px solid rgba(255,80,80,.4)';document.getElementById('rr-status').textContent='';document.getElementById('rr-timer').textContent='🔴 Recording — read at your own pace'}catch(e){alert('Please allow microphone access.')}}
@@ -723,7 +739,7 @@ const result=await uploadVoice(blob);if(result){document.getElementById('rr-stat
 function getRecMime(){if(typeof MediaRecorder==='undefined')return 'audio/webm';if(MediaRecorder.isTypeSupported('audio/webm;codecs=opus'))return 'audio/webm;codecs=opus';if(MediaRecorder.isTypeSupported('audio/webm'))return 'audio/webm';if(MediaRecorder.isTypeSupported('audio/mp4'))return 'audio/mp4';if(MediaRecorder.isTypeSupported('audio/ogg;codecs=opus'))return 'audio/ogg;codecs=opus';return ''}
 function waitBlob(mr,chunks){return new Promise(r=>{var mime=getRecMime()||'audio/webm';if(!mr||mr.state==='inactive'){r(new Blob(chunks,{type:mime}));return}mr.onstop=()=>{mr.stream.getTracks().forEach(t=>t.stop());r(new Blob(chunks,{type:mime}))};mr.stop()})}
 
-async function uploadVoice(blob){try{const fd=new FormData();var ext=blob.type.includes('mp4')?'m4a':blob.type.includes('ogg')?'ogg':'webm';fd.append('audio',blob,'voice.'+ext);const res=await fetch('/api/clone-voice',{method:'POST',body:fd});if(!res.ok){let m='Voice cloning failed';try{m=(await res.json()).error||m}catch(e){}showErr(m);return false}
+async function uploadVoice(blobs){try{if(!Array.isArray(blobs))blobs=[blobs];const fd=new FormData();blobs.forEach((blob,i)=>{var ext=blob.type.includes('mp4')?'m4a':blob.type.includes('ogg')?'ogg':'webm';fd.append('audio',blob,'voice_'+i+'.'+ext)});fd.append('language',S.lang);const res=await fetch('/api/clone-voice',{method:'POST',body:fd});if(!res.ok){let m='Voice cloning failed';try{m=(await res.json()).error||m}catch(e){}showErr(m);return false}
 const data=await res.json();if(data.success&&data.voiceId){S.voiceId=data.voiceId;save();return true}showErr(data.error||'Failed');return false}catch(e){showErr('Could not reach server: '+e.message);return false}}
 
 function resetVoice(btnId,statusId,timerId){const b=document.getElementById(btnId);b.classList.remove('hidden');b.innerHTML=t('voice_retry');b.style='';document.getElementById(statusId).textContent='';document.getElementById(timerId).textContent=''}
